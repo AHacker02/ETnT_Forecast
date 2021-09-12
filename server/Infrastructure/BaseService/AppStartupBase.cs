@@ -5,11 +5,13 @@ using System.Net;
 using System.Text;
 using AutoMapper;
 using BaseService.Extensions;
+using DataAccess;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -103,19 +105,16 @@ namespace BaseService
                     }
                 });
             });
+            services.AddDbContext<ForecastContext>(options =>
+                options.UseNpgsql(Configuration["postgres:connectionString"]));
 
 
-            //TODO:Add logging
+            //TODO:Add SeriLog
         }
 
 
         public void ConfigureApplication(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //if (env.IsDevelopment())
-            //{
-            //    app.UseDeveloperExceptionPage();
-            //}
-
             app.UseExceptionHandler(builder =>
             {
                 builder.Run(async context =>
@@ -130,7 +129,6 @@ namespace BaseService
                 });
             });
             app.UseHsts();
-            //app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowAnyMethod());
             app.UseCors("AllowOrigin");
             app.UseHttpsRedirection();
             app.UseRouting();

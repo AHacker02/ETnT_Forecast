@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Common.Models;
 using Microsoft.AspNetCore.Mvc;
+using Service.Abstractions;
 
 namespace api.Controllers
 {
@@ -10,10 +8,17 @@ namespace api.Controllers
     [ApiController]
     public class ForecastController : ControllerBase
     {
+        private readonly IForecastService _forecastService;
+
+        public ForecastController(IForecastService forecastService)
+        {
+            _forecastService = forecastService;
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAllForecast()
         {
-            return Ok();
+            return Ok(await _forecastService.GetAllForecast());
         }
     }
 }

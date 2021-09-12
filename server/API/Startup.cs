@@ -1,11 +1,11 @@
+using Autofac;
 using BaseService;
-using DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using Service;
 
 namespace api
 {
@@ -23,8 +23,11 @@ namespace api
                 Title = "Et&T Forecast API",
                 Description = "Et&T Forecast API"
             });
-            services.AddDbContext<ForecastContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("ForecastContext")));
+        }
+        
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterModule(new ServiceModule());
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

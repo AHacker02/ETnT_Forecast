@@ -5,8 +5,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Common\Common.csproj" />
-      <ProjectReference Include="..\..\DataAccess\DataAccess.csproj" />
+        <ProjectReference Include="..\..\Common\Common.csproj" />
+        <ProjectReference Include="..\..\Repository\Repository.csproj" />
+        <ProjectReference Include="..\Common\Common.csproj" />
+        <ProjectReference Include="..\Repository\Repository.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Autofac" Version="6.2.0" />
     </ItemGroup>
 
 </Project>

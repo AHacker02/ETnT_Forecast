@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Common.Models;
 using DataAccess;
-using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 using Service.Abstractions;
 
@@ -22,12 +21,14 @@ namespace Service
         }
 
         public async Task<Response<IEnumerable<ForecastViewModel>>> GetAllForecast()
-            => new Response<IEnumerable<ForecastViewModel>>()
+        {
+            return new Response<IEnumerable<ForecastViewModel>>
             {
                 Status = HttpStatusCode.OK,
                 Data = _mapper.Map<IEnumerable<ForecastViewModel>>(
                     await _db.Forecasts.ToListAsync()
                 )
             };
+        }
     }
 }
