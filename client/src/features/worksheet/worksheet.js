@@ -1,7 +1,7 @@
 import React from 'react';
 import {AgGridReact} from "ag-grid-react";
 import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-material.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import './worksheet.css';
 
 const Worksheet = () => {
@@ -13,6 +13,30 @@ const Worksheet = () => {
             "project": "Proj Name",
             "skillGroup": "Java FullStack",
             "businessUnit": "BGS",
+            "capabilities": "Training Solutions",
+            "chargeLine": "",
+            "forecastConfidence": "Soft Commitment",
+            "comments": "Java Full Stack",
+            "jan": 0.001,
+            "feb": 0.001,
+            "mar": 0.001,
+            "apr": 0.001,
+            "may": 0.001,
+            "june": 0.001,
+            "july": 0.001,
+            "aug": 0.001,
+            "sept": 0.001,
+            "oct": 0.001,
+            "nov": 0.001,
+            "dec": 0.001
+        },
+        {
+            "etNtOrg": "Bviation Biz Ops(BGS)",
+            "manager": "Manager Name",
+            "usFocal": "US F Name",
+            "project": "Proj Name",
+            "skillGroup": "Java FullStack",
+            "businessUnit": "BDS",
             "capabilities": "Training Solutions",
             "chargeLine": "",
             "forecastConfidence": "Soft Commitment",
@@ -55,9 +79,10 @@ const Worksheet = () => {
         {headerName: "November", field: 'nov'},
         {headerName: "December", field: 'dec'},
     ]
+    const defaultColumnDef = {sortable:true, filter:true, editable:true}
     return (
-        <div style={{height: "90vh", width: "100%"}} className={"ag-theme-material"}>
-            <AgGridReact columnDefs={columnDef} rowData={data}/>
+        <div className="ag-theme-alpine fullwidth-grid">
+            <AgGridReact columnDefs={columnDef} rowData={data} defaultColDef={defaultColumnDef}/>
         </div>
     );
 }
