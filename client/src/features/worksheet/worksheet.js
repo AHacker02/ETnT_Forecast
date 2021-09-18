@@ -1,10 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {AgGridReact} from "ag-grid-react";
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import './worksheet.css';
 
+
 const Worksheet = () => {
+    const [gridApi, setGridApi] = useState(null);
+  const [gridColumnApi, setGridColumnApi] = useState(null);
+  const [rowData, setRowData] = useState(null);
+
+  const onGridReady = (params) => {
+      console.log(params);
+    setGridApi(params.api);
+    setGridColumnApi(params.columnApi);
+
+    const updateData = (data) => {
+      setRowData(data);
+    };
+    debugger
+    fetch('https://localhost:44337/api/Forecast/GetAllFore',{
+    "method": "GET"
+  })
+    //fetch('https://www.ag-grid.com/example-assets/small-olympic-winners.json')
+      .then((resp) => resp.json())
+       .then((data) => updateData(data))
+     
+  };
+
+  const onBtExport = () => {
+      debugger;
+    gridApi.exportDataAsExcel();
+  };
+
     const data = [
         {
             "etNtOrg": "Aviation Biz Ops(BGS)",
@@ -81,8 +109,18 @@ const Worksheet = () => {
     ]
     const defaultColumnDef = {sortable:true, filter:true, editable:true}
     return (
+        <div className="container">
+        <div>
+          <button
+            onClick={() => onBtExport()}
+            style={{ marginBottom: '5px', fontWeight: 'bold' }}
+          >
+            Export to Excel
+          </button>
+        </div>
         <div className="ag-theme-alpine fullwidth-grid">
-            <AgGridReact columnDefs={columnDef} rowData={data} defaultColDef={defaultColumnDef}/>
+            <AgGridReact  onGridReady={onGridReady} columnDefs={columnDef} rowData={data} defaultColDef={defaultColumnDef} />
+        </div>
         </div>
     );
 }

@@ -12,6 +12,9 @@ function App() {
                     </a>
                 </div>
             </div>
+            <div className="ui option bar">
+HIIIIIIIIIIIIIII
+            </div>
             <div className="ui main text container">
                 <Worksheet/>
             </div>

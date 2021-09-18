@@ -17,12 +17,14 @@ namespace api
 
         public void ConfigureServices(IServiceCollection services)
         {
+             
             ConfigureApplicationServices(services, new OpenApiInfo
             {
                 Version = "v1",
                 Title = "Et&T Forecast API",
                 Description = "Et&T Forecast API"
             });
+
         }
         
         public void ConfigureContainer(ContainerBuilder builder)

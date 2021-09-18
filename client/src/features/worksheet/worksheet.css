@@ -1,4 +1,5 @@
 .fullwidth-grid{
     height: 70vh;
     width: 100vw;
+    overflow: auto;
 }

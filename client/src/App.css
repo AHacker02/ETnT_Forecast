@@ -5,3 +5,14 @@
 .ui.container{
     margin-left: 0!important;
 }
+
+.ui.option.bar{
+   background-color: rgb(20, 3, 66);
+   margin-top: 2cm;
+   height: 1.5cm;
+}
+
+.App
+{
+    overflow: auto;
+}
