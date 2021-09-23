@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Common.DbSets
+﻿namespace Common.DbSets
 {
-    public class Project:Lookup
+    public class Project : Lookup
     {
+        public Project(string value) : base(value)
+        {
+        }
     }
 }

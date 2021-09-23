@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Common.DbSets
+﻿namespace Common.DbSets
 {
-    public class Capability
+    public class Capability : Lookup
     {
+        public Capability(string value) : base(value)
+        {
+        }
     }
 }

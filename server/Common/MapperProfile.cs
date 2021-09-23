@@ -1,6 +1,6 @@
 using AutoMapper;
+using Common.DbSets;
 using Common.Models;
-using DataAccess.Models;
 
 namespace Common
 {

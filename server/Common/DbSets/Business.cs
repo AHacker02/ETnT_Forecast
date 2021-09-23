@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Common.DbSets
+﻿namespace Common.DbSets
 {
-    public class Business:Lookup
+    public class Business : Lookup
     {
+        public Business(string value) : base(value)
+        {
+        }
     }
 }

@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Common.DbSets
+﻿namespace Common.DbSets
 {
-    public class Skill:Lookup
+    public class Skill : Lookup
     {
+        public Skill(string value) : base(value)
+        {
+        }
     }
 }

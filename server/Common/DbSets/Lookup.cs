@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Common.DbSets
+﻿namespace Common.DbSets
 {
-    public abstract class Lookup:BaseEntity
+    public abstract class Lookup : BaseEntity
     {
+        public Lookup(string value)
+        {
+            Value = value;
+        }
+
         public string Value { get; set; }
     }
 }

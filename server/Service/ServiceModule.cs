@@ -4,7 +4,7 @@ using Service.Abstractions;
 
 namespace Service
 {
-    public class ServiceModule:Module
+    public class ServiceModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {

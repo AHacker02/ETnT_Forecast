@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Common.DbSets
+﻿namespace Common.DbSets
 {
-    public class ForecastData:BaseEntity
+    public class ForecastData : BaseEntity
     {
         public decimal Jan { get; set; }
         public decimal Feb { get; set; }
