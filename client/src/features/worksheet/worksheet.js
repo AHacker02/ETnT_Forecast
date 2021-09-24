@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {forwardRef, useEffect, useImperativeHandle, useState} from 'react';
 import {AgGridReact} from "ag-grid-react";
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
@@ -7,17 +7,33 @@ import {useDispatch, useSelector} from "react-redux";
 import {getForecast, selectForecast} from "./worksheetSlice";
 
 
-const Worksheet = () => {
+const Worksheet = forwardRef((props, ref) => {
     const forecast = useSelector(selectForecast);
     const dispatch = useDispatch();
     const [gridApi, setGridApi] = useState(null);
     const [gridColumnApi, setGridColumnApi] = useState(null);
     const [rowData, setRowData] = useState(null);
 
+    useImperativeHandle(
+        ref,
+        () => ({
+            onBtExport() {
+                gridApi.exportDataAsCsv();
+            }
+        }),
+    )
     useEffect(()=>{
-        debugger;
         setRowData(forecast);
+        autoSizeAll();
     },[forecast]);
+
+    const autoSizeAll = (skipHeader) => {
+        var allColumnIds = [];
+        gridColumnApi?.getAllColumns().forEach(function (column) {
+            allColumnIds.push(column.colId);
+        });
+        gridColumnApi?.autoSizeColumns(allColumnIds, skipHeader);
+    };
 
     const onGridReady = (params) => {
         console.log(params);
@@ -41,36 +57,28 @@ const Worksheet = () => {
         {headerName: "Chargeline", field: 'chargeLine'},
         {headerName: "Forecast Confidence", field: 'forecastConfidence'},
         {headerName: "Comments", field: 'comments'},
-        {headerName: "January", field: 'jan'},
-        {headerName: "February", field: 'feb'},
-        {headerName: "March", field: 'mar'},
-        {headerName: "April", field: 'apr'},
+        {headerName: "Jan", field: 'jan'},
+        {headerName: "Feb", field: 'feb'},
+        {headerName: "Mar", field: 'mar'},
+        {headerName: "Apr", field: 'apr'},
         {headerName: "May", field: 'may'},
         {headerName: "June", field: 'june'},
         {headerName: "July", field: 'july'},
-        {headerName: "August", field: 'aug'},
-        {headerName: "September", field: 'sep'},
-        {headerName: "October", field: 'oct'},
-        {headerName: "November", field: 'nov'},
-        {headerName: "December", field: 'dec'},
+        {headerName: "Aug", field: 'aug'},
+        {headerName: "Sept", field: 'sep'},
+        {headerName: "Oct", field: 'oct'},
+        {headerName: "Nov", field: 'nov'},
+        {headerName: "Dec", field: 'dec'},
     ]
     const defaultColumnDef = {sortable: true, filter: true, editable: true}
     return (
         <div className="container">
-            <div>
-                <button
-                    onClick={() => onBtExport()}
-                    style={{marginBottom: '5px', fontWeight: 'bold'}}
-                >
-                    Export to Excel
-                </button>
-            </div>
             <div className="ag-theme-alpine fullwidth-grid">
                 <AgGridReact onGridReady={onGridReady} columnDefs={columnDef} rowData={rowData}
                              defaultColDef={defaultColumnDef}/>
             </div>
         </div>
     );
-}
+});
 
 export default Worksheet;

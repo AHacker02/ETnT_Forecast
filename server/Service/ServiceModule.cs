@@ -10,6 +10,7 @@ namespace Service
         {
             builder.RegisterModule(new RepositoryModule());
             builder.RegisterType<ForecastService>().As<IForecastService>();
+            builder.RegisterType<AsyncRunner>().As<IAsyncRunner>().SingleInstance();
         }
     }
 }

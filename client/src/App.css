@@ -1,5 +1,5 @@
 .ui.main.text.container {
-    margin-top: 7em
+    margin-top: 40px
 }
 
 .ui.container{
@@ -10,6 +10,16 @@
    background-color: rgb(20, 3, 66);
    margin-top: 2cm;
    height: 1.5cm;
+}
+
+.ui.menu{
+    background: #0E6EB8!important;
+}
+
+i.large.icon{
+    color: white;
+    margin-top: 8px;
+    margin-right: 10px;
 }
 
 .App

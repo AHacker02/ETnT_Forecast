@@ -1,5 +1,9 @@
 .fullwidth-grid{
-    height: 70vh;
+    height: 97vh;
     width: 100vw;
     overflow: auto;
+}
+
+div.ag-theme-alpine div.ag-row {
+    font-size: 12px !important;
 }

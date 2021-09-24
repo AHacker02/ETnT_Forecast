@@ -1,7 +1,7 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import _ from "lodash";
 import api from "../../utils/api";
-import {FORECAST} from "../../utils/endpoints";
+import {FORECAST, UPLOAD} from "../../utils/endpoints";
 
 let cancelToken;
 
@@ -12,6 +12,18 @@ export const getForecast = createAsyncThunk(
         return response.data.data;
     }
 )
+
+export const uploadForecast = createAsyncThunk("forecast/upload",
+    async (file) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        const response = await api.post(UPLOAD, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        return response.data.data;
+    })
 
 export const worksheetSlice = createSlice({
     name: "forecast",
