@@ -1,4 +1,4 @@
-﻿namespace Common.DbSets
+﻿namespace DataAccess.DbSets
 {
     public class Category : Lookup
     {

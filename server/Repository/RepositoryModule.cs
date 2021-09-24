@@ -8,6 +8,7 @@ namespace DataAccess
         {
             builder.RegisterType<ForecastContext>();
             builder.RegisterType<Seeder>();
+            builder.RegisterType<ForecastRepository>();
         }
     }
 }

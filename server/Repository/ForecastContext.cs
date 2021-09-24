@@ -1,4 +1,4 @@
-using Common.DbSets;
+using DataAccess.DbSets;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess
@@ -25,13 +25,17 @@ namespace DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Forecast>()
+                .HasMany(x => x.ForecastData)
+                .WithOne(f => f.Forecast)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
             if (!options.IsConfigured)
-                options.UseNpgsql("Host=192.168.0.104;Port=5432;Username=postgres;Password=#Iamdevil1;Database=etnt;");
+                options.UseNpgsql("Host=192.168.0.100;Port=5432;Username=postgres;Password=#Iamdevil1;Database=etnt;");
+            
         }
     }
 }

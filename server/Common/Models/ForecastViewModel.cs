@@ -1,15 +1,18 @@
+using System;
+
 namespace Common.Models
 {
     public class ForecastViewModel
     {
-        public string EtNtOrg { get; set; }
+        public Guid Id { get; set; }
+        public string Org { get; set; }
         public string Manager { get; set; }
-        public string UsFocal { get; set; }
+        public string USFocal { get; set; }
         public string Project { get; set; }
         public string SkillGroup { get; set; }
-        public string BusinessUnit { get; set; }
-        public string Capabilities { get; set; }
-        public string ChargeLine { get; set; }
+        public string Business { get; set; }
+        public string Capability { get; set; }
+        public string Chargeline { get; set; }
         public string ForecastConfidence { get; set; }
         public string Comments { get; set; }
         public decimal Jan { get; set; }
@@ -21,7 +24,7 @@ namespace Common.Models
         public decimal July { get; set; }
         public decimal Aug { get; set; }
         public decimal Oct { get; set; }
-        public decimal Sept { get; set; }
+        public decimal Sep { get; set; }
         public decimal Nov { get; set; }
         public decimal Dec { get; set; }
     }

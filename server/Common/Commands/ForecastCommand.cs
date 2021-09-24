@@ -1,7 +1,17 @@
-﻿namespace Common.DbSets
+namespace Common.Commands
 {
-    public class ForecastData : BaseEntity
+    public class ForecastCommand
     {
+        public string Org { get; set; }
+        public string Manager { get; set; }
+        public string USFocal { get; set; }
+        public string Project { get; set; }
+        public string SkillGroup { get; set; }
+        public string Business { get; set; }
+        public string Capability { get; set; }
+        public string Chargeline { get; set; }
+        public string ForecastConfidence { get; set; }
+        public string Comments { get; set; }
         public decimal Jan { get; set; }
         public decimal Feb { get; set; }
         public decimal Mar { get; set; }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Common.DbSets
+namespace DataAccess.DbSets
 {
     public abstract class BaseEntity
     {

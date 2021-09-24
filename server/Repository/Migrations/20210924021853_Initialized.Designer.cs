@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ForecastContext))]
-    [Migration("20210920163506_Initialized")]
+    [Migration("20210924021853_Initialized")]
     partial class Initialized
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,10 +18,10 @@ namespace DataAccess.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
-                .HasAnnotation("ProductVersion", "3.1.19")
+                .HasAnnotation("ProductVersion", "3.1.18")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("Common.DbSets.Business", b =>
+            modelBuilder.Entity("DataAccess.DbSets.Business", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -41,7 +41,7 @@ namespace DataAccess.Migrations
                     b.ToTable("Businesses");
                 });
 
-            modelBuilder.Entity("Common.DbSets.Capability", b =>
+            modelBuilder.Entity("DataAccess.DbSets.Capability", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -61,7 +61,7 @@ namespace DataAccess.Migrations
                     b.ToTable("Capabilities");
                 });
 
-            modelBuilder.Entity("Common.DbSets.Category", b =>
+            modelBuilder.Entity("DataAccess.DbSets.Category", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -81,7 +81,7 @@ namespace DataAccess.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("Common.DbSets.Forecast", b =>
+            modelBuilder.Entity("DataAccess.DbSets.Forecast", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -144,7 +144,7 @@ namespace DataAccess.Migrations
                     b.ToTable("Forecasts");
                 });
 
-            modelBuilder.Entity("Common.DbSets.ForecastData", b =>
+            modelBuilder.Entity("DataAccess.DbSets.ForecastData", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -205,7 +205,7 @@ namespace DataAccess.Migrations
                     b.ToTable("ForecastData");
                 });
 
-            modelBuilder.Entity("Common.DbSets.Org", b =>
+            modelBuilder.Entity("DataAccess.DbSets.Org", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -225,7 +225,7 @@ namespace DataAccess.Migrations
                     b.ToTable("Orgs");
                 });
 
-            modelBuilder.Entity("Common.DbSets.Project", b =>
+            modelBuilder.Entity("DataAccess.DbSets.Project", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -245,7 +245,7 @@ namespace DataAccess.Migrations
                     b.ToTable("Projects");
                 });
 
-            modelBuilder.Entity("Common.DbSets.Skill", b =>
+            modelBuilder.Entity("DataAccess.DbSets.Skill", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -265,7 +265,7 @@ namespace DataAccess.Migrations
                     b.ToTable("Skills");
                 });
 
-            modelBuilder.Entity("Common.DbSets.User", b =>
+            modelBuilder.Entity("DataAccess.DbSets.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -288,46 +288,47 @@ namespace DataAccess.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Common.DbSets.Forecast", b =>
+            modelBuilder.Entity("DataAccess.DbSets.Forecast", b =>
                 {
-                    b.HasOne("Common.DbSets.Business", "Business")
+                    b.HasOne("DataAccess.DbSets.Business", "Business")
                         .WithMany()
                         .HasForeignKey("BusinessId");
 
-                    b.HasOne("Common.DbSets.Capability", "Capability")
+                    b.HasOne("DataAccess.DbSets.Capability", "Capability")
                         .WithMany()
                         .HasForeignKey("CapabilityId");
 
-                    b.HasOne("Common.DbSets.Category", "ForecastConfidence")
+                    b.HasOne("DataAccess.DbSets.Category", "ForecastConfidence")
                         .WithMany()
                         .HasForeignKey("ForecastConfidenceId");
 
-                    b.HasOne("Common.DbSets.User", "Manager")
+                    b.HasOne("DataAccess.DbSets.User", "Manager")
                         .WithMany()
                         .HasForeignKey("ManagerId");
 
-                    b.HasOne("Common.DbSets.Org", "Org")
+                    b.HasOne("DataAccess.DbSets.Org", "Org")
                         .WithMany()
                         .HasForeignKey("OrgId");
 
-                    b.HasOne("Common.DbSets.Project", "Project")
+                    b.HasOne("DataAccess.DbSets.Project", "Project")
                         .WithMany()
                         .HasForeignKey("ProjectId");
 
-                    b.HasOne("Common.DbSets.Skill", "SkillGroup")
+                    b.HasOne("DataAccess.DbSets.Skill", "SkillGroup")
                         .WithMany()
                         .HasForeignKey("SkillGroupId");
 
-                    b.HasOne("Common.DbSets.User", "USFocal")
+                    b.HasOne("DataAccess.DbSets.User", "USFocal")
                         .WithMany()
                         .HasForeignKey("USFocalId");
                 });
 
-            modelBuilder.Entity("Common.DbSets.ForecastData", b =>
+            modelBuilder.Entity("DataAccess.DbSets.ForecastData", b =>
                 {
-                    b.HasOne("Common.DbSets.Forecast", null)
+                    b.HasOne("DataAccess.DbSets.Forecast", "Forecast")
                         .WithMany("ForecastData")
-                        .HasForeignKey("ForecastId");
+                        .HasForeignKey("ForecastId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

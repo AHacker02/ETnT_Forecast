@@ -1,5 +1,5 @@
 using System.Linq;
-using Common.DbSets;
+using DataAccess.DbSets;
 
 namespace DataAccess
 {
@@ -18,6 +18,7 @@ namespace DataAccess
             SeedBusinessUnits();
             SeedCapabilities();
             SeedCategory();
+            _db.SaveChanges();
         }
 
         private void SeedSkills()

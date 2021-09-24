@@ -184,6 +184,7 @@ namespace DataAccess.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     UpdatedAt = table.Column<DateTime>(nullable: false),
+                    ForecastId = table.Column<Guid>(nullable: true),
                     Jan = table.Column<decimal>(nullable: false),
                     Feb = table.Column<decimal>(nullable: false),
                     Mar = table.Column<decimal>(nullable: false),
@@ -196,8 +197,7 @@ namespace DataAccess.Migrations
                     Oct = table.Column<decimal>(nullable: false),
                     Nov = table.Column<decimal>(nullable: false),
                     Dec = table.Column<decimal>(nullable: false),
-                    Year = table.Column<int>(nullable: false),
-                    ForecastId = table.Column<Guid>(nullable: true)
+                    Year = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -207,7 +207,7 @@ namespace DataAccess.Migrations
                         column: x => x.ForecastId,
                         principalTable: "Forecasts",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
