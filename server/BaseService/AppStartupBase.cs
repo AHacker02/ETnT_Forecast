@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
-using AutoMapper;
 using BaseService.Extensions;
 using DataAccess;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

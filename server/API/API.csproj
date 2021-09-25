@@ -8,13 +8,15 @@
 
     <ItemGroup>
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
+        <PackageReference Include="MediatR" Version="9.0.0" />
+        <PackageReference Include="MediatR.Extensions.Autofac.DependencyInjection" Version="7.3.0" />
         <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.2" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Common\Common.csproj" />
-        <ProjectReference Include="..\Infrastructure\BaseService\BaseService.csproj" />
+        <ProjectReference Include="..\BaseService\BaseService.csproj" />
         <ProjectReference Include="..\Service\Service.csproj" />
     </ItemGroup>
 
