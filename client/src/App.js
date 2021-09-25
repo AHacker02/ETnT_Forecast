@@ -1,18 +1,27 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import './App.css';
 import Worksheet from "./features/worksheet/worksheet";
 import {useDispatch} from "react-redux";
-import {uploadForecast} from "./features/worksheet/worksheetSlice";
+import {saveForecast, uploadForecast} from "./features/worksheet/worksheetSlice";
 
 function App() {
     const ref = useRef();
     const dispatch = useDispatch();
+    const [isDirty,setIsDirty] = useState(false);
     const onFileChange = event => {
         debugger;
         if(event.target.files[0]) {
             dispatch(uploadForecast(event.target.files[0]));
         }
     };
+
+    // useEffect(()=>{
+    //     console.log(isDirty);
+    //     if(isDirty){
+    //         dispatch(saveForecast());
+    //     }
+    // },[isDirty])
+
     return (
         <div className="App">
             <div className="ui top fixed inverted menu">
@@ -20,6 +29,9 @@ function App() {
                     <a className="header item" href="#root">
                         ET & T
                     </a>
+                </div>
+                <div className="ui no-right-margin">
+                    <i className="save icon large" onClick={()=>{dispatch(saveForecast())}}></i>
                 </div>
                 <div className="ui no-right-margin">
                     <i className="download icon large" onClick={()=>{ref.current.onBtExport()}}></i>
@@ -30,7 +42,7 @@ function App() {
                 </div>
             </div>
             <div className="ui main text container">
-                <Worksheet ref={ref} />
+                <Worksheet ref={ref} setIsDirty={setIsDirty}/>
             </div>
         </div>
 );

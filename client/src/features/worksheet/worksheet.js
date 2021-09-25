@@ -4,7 +4,7 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import './worksheet.css';
 import {useDispatch, useSelector} from "react-redux";
-import {getForecast, selectForecast} from "./worksheetSlice";
+import {getForecast, selectForecast, setColValue} from "./worksheetSlice";
 
 
 const Worksheet = forwardRef((props, ref) => {
@@ -45,6 +45,9 @@ const Worksheet = forwardRef((props, ref) => {
     const onBtExport = () => {
         gridApi.exportDataAsExcel();
     };
+    const valueSetters = params => {
+        dispatch(setColValue({id:params.data.id, key:params.colDef.field, value:params.newValue}))
+    };
 
     const columnDef = [
         {headerName: "ET&T Org", field: 'org'},
@@ -70,12 +73,16 @@ const Worksheet = forwardRef((props, ref) => {
         {headerName: "Nov", field: 'nov'},
         {headerName: "Dec", field: 'dec'},
     ]
-    const defaultColumnDef = {sortable: true, filter: true, editable: true}
+
+    const onCellEditingStopped=(e)=> {
+        props.setIsDirty(true);
+    }
+    const defaultColumnDef = {sortable: true, filter: true, editable: true,valueSetter:valueSetters}
     return (
         <div className="container">
             <div className="ag-theme-alpine fullwidth-grid">
                 <AgGridReact onGridReady={onGridReady} columnDefs={columnDef} rowData={rowData}
-                             defaultColDef={defaultColumnDef}/>
+                             defaultColDef={defaultColumnDef} onCellEditingStopped={onCellEditingStopped}/>
             </div>
         </div>
     );
