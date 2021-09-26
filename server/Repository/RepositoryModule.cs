@@ -1,4 +1,5 @@
 using Autofac;
+using DataAccess.Abstractions;
 
 namespace DataAccess
 {
@@ -8,7 +9,8 @@ namespace DataAccess
         {
             builder.RegisterType<ForecastContext>();
             builder.RegisterType<Seeder>();
-            builder.RegisterType<ForecastRepository>();
+            builder.RegisterType<ForecastRepository>().As<IForecastRepository>();
+            builder.RegisterType<LookupRepository>().As<ILookupRepository>();
         }
     }
 }

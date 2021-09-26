@@ -3,8 +3,10 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using AutoWrapper;
 using BaseService.Extensions;
 using DataAccess;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -39,7 +41,7 @@ namespace BaseService
         public IConfiguration Configuration { get; }
 
 
-        public void ConfigureApplicationServices(IServiceCollection services, OpenApiInfo serviceInfo)
+        protected void ConfigureApplicationServices(IServiceCollection services, OpenApiInfo serviceInfo)
         {
             services.AddControllers();
             services.AddHttpContextAccessor();
@@ -107,12 +109,14 @@ namespace BaseService
             services.AddDbContext<ForecastContext>(options =>
                 options.UseNpgsql(Configuration["postgres:connectionString"]));
 
+            services.AddMediatR(AppDomain.CurrentDomain.Load("Service"));
+
 
             //TODO:Add SeriLog
         }
 
 
-        public void ConfigureApplication(IApplicationBuilder app, IWebHostEnvironment env)
+        protected void ConfigureApplication(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseExceptionHandler(builder =>
             {
@@ -130,6 +134,7 @@ namespace BaseService
             app.UseHsts();
             app.UseCors("AllowOrigin");
             app.UseHttpsRedirection();
+            app.UseApiResponseAndExceptionWrapper();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();

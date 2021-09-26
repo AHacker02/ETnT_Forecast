@@ -1,109 +1,92 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
-using Autofac;
+using AutoWrapper.Wrappers;
 using Common.Commands;
+using Common.Query;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json.Linq;
-using OfficeOpenXml;
-using Service.Abstractions;
 
 namespace api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/forecast")]
     [ApiController]
     public class ForecastController : ControllerBase
     {
-        private readonly IForecastService _forecastService;
-        private readonly IAsyncRunner _asyncRunner;
+        private readonly IMediator _mediator;
 
-        public ForecastController(IForecastService forecastService, IAsyncRunner asyncRunner)
+        public ForecastController(IMediator mediator)
         {
-            _forecastService = forecastService;
-            _asyncRunner = asyncRunner;
+            _mediator = mediator;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllForecast()
+        /// <summary>
+        ///     Get All Forecasts by FyYear
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("{fyYear}")]
+        public async Task<ApiResponse> GetAllForecastByFyYear(int fyYear)
         {
-            return Ok(await _forecastService.GetAllForecast());
+            var response = await _mediator.Send(new GetForecastsByFyYearQuery(fyYear));
+            return response.Any()
+                ? new ApiResponse(response)
+                : new ApiResponse(statusCode: (int) HttpStatusCode.NoContent,
+                    message: $"No Records Found for Year:{fyYear}");
         }
 
+        /// <summary>
+        ///     Add and update forecast
+        /// </summary>
+        /// <param name="forecasts"></param>
+        /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> AddForecasts(IEnumerable<ForecastCommand> forecasts)
+        public async Task<ApiResponse> AddForecasts(AddUpdateForecastCommand forecasts)
         {
-            return Ok(await _forecastService.AddForecasts(forecasts));
+            var response = await _mediator.Send(forecasts);
+            return response is int
+                ? new ApiResponse(response)
+                : new ApiResponse((int) HttpStatusCode.BadRequest, response);
         }
 
+        /// <summary>
+        ///     Delete forecast by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id:guid}")]
-        public async Task<IActionResult> DeleteForecast(Guid id)
+        public async Task<ApiResponse> DeleteForecast(Guid id)
         {
-            return Ok(await _forecastService.DeleteForecast(id));
+            return await _mediator.Send(new DeleteForecastCommand(id))
+                ? new ApiResponse()
+                : new ApiResponse((int) HttpStatusCode.NotFound, $"Forecast {id} not found");
         }
 
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadFile([FromForm] IFormFile file)
+        public async Task<ApiResponse> UploadFile([FromForm] IFormFile file)
         {
-            Stream stream = new MemoryStream();
-            await file.CopyToAsync(stream);
-            _asyncRunner.Run<IForecastService>((cis) =>
+            var command = new FileUploadCommand
             {
-                try
-                {
-                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-                    using (ExcelPackage package = new ExcelPackage(stream))
-                    {
-                        var worksheet = package.Workbook.Worksheets[0];
-                        int row = 2;
-                        var forecast = new List<ForecastCommand>();
-                        while (!String.IsNullOrEmpty(worksheet.Cells[row, 1].Value?.ToString()))
-                        {
-                            forecast.Add(new ForecastCommand()
-                            {
-                                Org = worksheet.Cells[row, 2].Text.ToString(),
-                                Manager = worksheet.Cells[row, 3].Text,
-                                USFocal = worksheet.Cells[row, 4].Text,
-                                Project = worksheet.Cells[row, 5].Text,
-                                SkillGroup = worksheet.Cells[row, 6].Text,
-                                Business = worksheet.Cells[row, 7].Text,
-                                Capability = worksheet.Cells[row, 8].Text,
-                                Chargeline = worksheet.Cells[row, 9].Text,
-                                ForecastConfidence = worksheet.Cells[row, 10].Text,
-                                Comments = worksheet.Cells[row, 11].Text,
-                                Jan = Convert.ToDecimal(worksheet.Cells[row, 12].Text),
-                                Feb = Convert.ToDecimal(worksheet.Cells[row, 13].Text),
-                                Mar = Convert.ToDecimal(worksheet.Cells[row, 14].Text),
-                                Apr = Convert.ToDecimal(worksheet.Cells[row, 15].Text),
-                                May = Convert.ToDecimal(worksheet.Cells[row, 16].Text),
-                                June = Convert.ToDecimal(worksheet.Cells[row, 17].Text),
-                                July = Convert.ToDecimal(worksheet.Cells[row, 18].Text),
-                                Sep = Convert.ToDecimal(worksheet.Cells[row, 19].Text),
-                                Oct = Convert.ToDecimal(worksheet.Cells[row, 20].Text),
-                                Nov = Convert.ToDecimal(worksheet.Cells[row, 21].Text),
-                                Dec = Convert.ToDecimal(worksheet.Cells[row, 22].Text),
-                                Year = Convert.ToInt32($"20{worksheet.Cells[1, 12].Text.Split("-")[1]}"),
-                            });
-                            row++;
-                        }
-                        cis.AddForecasts(forecast).GetAwaiter();
-                    }
-                    
-                    
-                }
+                Id = Guid.NewGuid(),
+                FileName = file.Name
+            };
+            await file.CopyToAsync(command.File);
+            _mediator.Publish(command);
 
-                catch
+            return new ApiResponse(command.Id);
+        }
+        
+        [HttpGet("task/{id:guid}")]
+        public async Task<ApiResponse> GetTaskStatus(Guid id)
+        {
+            return new ApiResponse(await _mediator.Send(new GetTaskStatusQuery(id)));
+        }
 
-                {
-                    // catch stuff
-                    throw;
-                }
-            });
-            // Task.Run(() => _forecastService.UploadForecast(stream, _lifetime));
-            return Ok();
+        [HttpGet("lookup")]
+        public async Task<ApiResponse> GetAllLookupData()
+        {
+            return new ApiResponse(await _mediator.Send(new GetLookupQuery()));
         }
     }
 }

@@ -1,6 +1,5 @@
 using Autofac;
 using DataAccess;
-using Service.Abstractions;
 
 namespace Service
 {
@@ -8,9 +7,8 @@ namespace Service
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<ForecastCommandValidator>();
             builder.RegisterModule(new RepositoryModule());
-            builder.RegisterType<ForecastService>().As<IForecastService>();
-            builder.RegisterType<AsyncRunner>().As<IAsyncRunner>().SingleInstance();
         }
     }
 }

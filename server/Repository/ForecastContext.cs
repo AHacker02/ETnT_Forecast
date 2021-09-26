@@ -22,6 +22,7 @@ namespace DataAccess
         public virtual DbSet<Project> Projects { get; set; }
         public virtual DbSet<Skill> Skills { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<EventData> Task { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,7 +36,6 @@ namespace DataAccess
         {
             if (!options.IsConfigured)
                 options.UseNpgsql("Host=192.168.0.100;Port=5432;Username=postgres;Password=#Iamdevil1;Database=etnt;");
-            
         }
     }
 }

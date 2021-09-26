@@ -4,10 +4,10 @@
     {
         public ForecastData()
         {
-            
         }
 
-        public ForecastData(Forecast forecast, decimal jan, decimal feb, decimal mar, decimal apr, decimal may, decimal june, decimal july, decimal aug, decimal sep, decimal oct, decimal nov, decimal dec, int year)
+        public ForecastData(Forecast forecast, decimal jan, decimal feb, decimal mar, decimal apr, decimal may,
+            decimal june, decimal july, decimal aug, decimal sep, decimal oct, decimal nov, decimal dec, int year)
         {
             Forecast = forecast;
             Jan = jan;
@@ -24,6 +24,7 @@
             Dec = dec;
             Year = year;
         }
+
         public Forecast Forecast { get; set; }
         public decimal Jan { get; set; }
         public decimal Feb { get; set; }

@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using FluentValidation.Results;
+
 namespace Common.Commands
 {
     public class ForecastCommand
@@ -25,5 +28,10 @@ namespace Common.Commands
         public decimal Nov { get; set; }
         public decimal Dec { get; set; }
         public int Year { get; set; }
+    }
+
+    public class ForecastCommandError
+    {
+        public List<ValidationFailure> Errors { get; set; }
     }
 }

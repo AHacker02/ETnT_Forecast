@@ -6,9 +6,10 @@ namespace DataAccess.DbSets
     {
         public Forecast()
         {
-            
         }
-        public Forecast(Org org, User manager, User usFocal, Project project, Skill skillGroup, Business business, Capability capability, string chargeline, Category forecastConfidence, string comments)
+
+        public Forecast(Org org, User manager, User usFocal, Project project, Skill skillGroup, Business business,
+            Capability capability, string chargeline, Category forecastConfidence, string comments)
         {
             Org = org;
             Manager = manager;
@@ -22,6 +23,7 @@ namespace DataAccess.DbSets
             Comments = comments;
             ForecastData = new List<ForecastData>();
         }
+
         public Org Org { get; set; }
         public User Manager { get; set; }
         public User USFocal { get; set; }
