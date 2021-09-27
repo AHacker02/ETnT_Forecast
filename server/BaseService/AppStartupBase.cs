@@ -56,57 +56,56 @@ namespace BaseService
                             .AllowAnyHeader()
                             .AllowAnyMethod()
                             .SetIsOriginAllowed(origin => true)
-                            //.WithOrigins("https://imessage-clone-54a5a.web.app", "http://localhost:3000")
                             .AllowCredentials()
                 );
             });
 
             services.AddLogging();
             services.AddAutoMapper(AppDomain.CurrentDomain.Load("Service"));
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey =
-                        new SymmetricSecurityKey(
-                            Encoding.ASCII.GetBytes(Configuration.GetSection("Token").Value)),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
+            // services.AddAuthentication(x =>
+            // {
+            //     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            // }).AddJwtBearer(options =>
+            // {
+            //     options.TokenValidationParameters = new TokenValidationParameters
+            //     {
+            //         ValidateIssuerSigningKey = true,
+            //         IssuerSigningKey =
+            //             new SymmetricSecurityKey(
+            //                 Encoding.ASCII.GetBytes(Configuration.GetSection("Token").Value)),
+            //         ValidateIssuer = false,
+            //         ValidateAudience = false
+            //     };
+            // });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc(serviceInfo.Version, serviceInfo);
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer",
-                    BearerFormat = "JWT",
-                    In = ParameterLocation.Header,
-                    Description =
-                        "JWT Authorization header using the Bearer scheme. Get AuthController token from Customer service. Enter token in Values eg. Bearer {token}"
-                });
-
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            }
-                        },
-                        new string[] { }
-                    }
-                });
+                // c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                // {
+                //     Name = "Authorization",
+                //     Type = SecuritySchemeType.ApiKey,
+                //     Scheme = "Bearer",
+                //     BearerFormat = "JWT",
+                //     In = ParameterLocation.Header,
+                //     Description =
+                //         "JWT Authorization header using the Bearer scheme. Get AuthController token from Customer service. Enter token in Values eg. Bearer {token}"
+                // });
+                //
+                // c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                // {
+                //     {
+                //         new OpenApiSecurityScheme
+                //         {
+                //             Reference = new OpenApiReference
+                //             {
+                //                 Type = ReferenceType.SecurityScheme,
+                //                 Id = "Bearer"
+                //             }
+                //         },
+                //         new string[] { }
+                //     }
+                // });
             });
             services.AddDbContext<ForecastContext>(options =>
                 options.UseNpgsql(Configuration["postgres:connectionString"]));
@@ -120,9 +119,6 @@ namespace BaseService
             });
 
             services.AddHangfireServer();
-
-
-            //TODO:Add SeriLog
         }
 
 
@@ -150,7 +146,7 @@ namespace BaseService
             app.UseAuthorization();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
             app.UseSwagger();
-            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Test API V1"); });
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Et&T Forecast API V1"); });
         }
     }
 }

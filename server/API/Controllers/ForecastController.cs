@@ -68,6 +68,11 @@ namespace api.Controllers
                 : new ApiResponse((int) HttpStatusCode.NotFound, $"Forecast {id} not found");
         }
 
+        /// <summary>
+        ///     Process forecast file upload
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
         [HttpPost("upload")]
         public async Task<ApiResponse> UploadFile([FromForm] IFormFile file)
         {
@@ -85,12 +90,21 @@ namespace api.Controllers
             return new ApiResponse(command.Id);
         }
 
+        /// <summary>
+        ///     Get file upload status
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("task/{id:guid}")]
         public async Task<ApiResponse> GetTaskStatus(Guid id)
         {
             return new ApiResponse(await _mediator.Send(new GetTaskStatusQuery(id)));
         }
 
+        /// <summary>
+        ///     Get Master Data
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("lookup")]
         public async Task<ApiResponse> GetAllLookupData()
         {
