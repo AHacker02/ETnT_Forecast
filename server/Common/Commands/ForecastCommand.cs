@@ -30,7 +30,7 @@ namespace Common.Commands
         public int Year { get; set; }
     }
 
-    public class ForecastCommandError
+    public class ForecastCommandError : ForecastCommand
     {
         public List<ValidationFailure> Errors { get; set; }
     }

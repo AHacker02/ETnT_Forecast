@@ -3,8 +3,7 @@ using MediatR;
 
 namespace Common.Query
 {
-    public class GetLookupQuery:IRequest<LookupViewModel>
+    public class GetLookupQuery : IRequest<LookupViewModel>
     {
-        
     }
 }

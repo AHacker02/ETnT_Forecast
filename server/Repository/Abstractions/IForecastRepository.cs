@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DataAccess.DbSets;
@@ -39,12 +38,13 @@ namespace DataAccess.Abstractions
         Task AddReplaceForecastDataAsync(ForecastData forecastData);
 
         Task DeleteForecastAsync(Guid id);
-        
+
         /// <summary>
-        /// Get all years for which data is available
+        ///     Get all years for which data is available
         /// </summary>
         /// <returns></returns>
         Task<IEnumerable<int>> GetAllYears();
+
         Task<int> SaveChangesAsync();
     }
 }

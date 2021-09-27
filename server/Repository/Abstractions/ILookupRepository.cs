@@ -19,6 +19,6 @@ namespace DataAccess.Abstractions
         Task AddTaskAsync(EventData @event);
         Task UpdateTaskStatusAsync(Guid id, EventStatus status, string error = null);
 
-        Task<IEnumerable<T>> GetAll<T>()where T : class;
+        Task<IEnumerable<T>> GetAll<T>() where T : class;
     }
 }

@@ -103,7 +103,9 @@ namespace DataAccess
         }
 
         public async Task<IEnumerable<int>> GetAllYears()
-            => await _context.ForecastData.Select(x => x.Year).Distinct().ToListAsync();
+        {
+            return await _context.ForecastData.Select(x => x.Year).Distinct().ToListAsync();
+        }
 
         public async Task<int> SaveChangesAsync()
         {

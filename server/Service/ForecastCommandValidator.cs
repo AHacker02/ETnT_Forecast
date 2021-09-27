@@ -59,7 +59,7 @@ namespace Service
         private static bool Exists(string name)
         {
             using var context = new ForecastContext();
-            return context.Set<User>().Any(x => x.FullName == name);
+            return context.Set<User>().ToList().Any(x => x.FullName == name);
         }
     }
 }

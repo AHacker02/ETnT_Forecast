@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.Commands;
 using Common.Models;
 using DataAccess.Abstractions;
+using DataAccess.DbSets;
 using MediatR;
+using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json;
 using OfficeOpenXml;
 
@@ -13,22 +16,39 @@ namespace Service.CommandHandlers
 {
     public class FileUploadCommandHandler : INotificationHandler<FileUploadCommand>
     {
-        private readonly IMediator _mediator;
+        private readonly IWebHostEnvironment _environment;
+        private readonly IRequestHandler<AddUpdateForecastCommand, object> _forecastRequestHandler;
         private readonly ILookupRepository _repository;
 
-        public FileUploadCommandHandler(IMediator mediator, ILookupRepository repository)
+        public FileUploadCommandHandler(
+            IRequestHandler<AddUpdateForecastCommand, object> forecastRequestHandler,
+            ILookupRepository repository,
+            IWebHostEnvironment environment)
         {
-            _mediator = mediator;
+            _forecastRequestHandler = forecastRequestHandler;
             _repository = repository;
+            _environment = environment;
         }
 
         public async Task Handle(FileUploadCommand request, CancellationToken cancellationToken)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            await _repository.UpdateTaskStatusAsync(request.Id, EventStatus.Started);
+            await _repository.AddTaskAsync(new EventData
+            {
+                Id = request.Id,
+                FileName = request.FileName,
+                Status = EventStatus.Started.ToString()
+            });
+            // await _repository.UpdateTaskStatusAsync(request.Id, EventStatus.Started);
             try
             {
-                using var package = new ExcelPackage(request.File);
+                using var package = new ExcelPackage();
+                await using (var stream =
+                    File.OpenRead(Path.Combine(_environment.ContentRootPath, "uploads", request.FileName)))
+                {
+                    await package.LoadAsync(stream, cancellationToken);
+                }
+
                 var worksheet = package.Workbook.Worksheets[0];
                 var row = 2;
                 var forecast = new List<ForecastCommand>();
@@ -65,11 +85,16 @@ namespace Service.CommandHandlers
                     row++;
                 }
 
-                var response = await _mediator.Send(new AddUpdateForecastCommand {Forecasts = forecast},
+                var response = await _forecastRequestHandler.Handle(new AddUpdateForecastCommand {Forecasts = forecast},
                     cancellationToken);
 
+
                 if (response is int)
+                {
                     await _repository.UpdateTaskStatusAsync(request.Id, EventStatus.Completed);
+                    File.Delete(Path.Combine(_environment.ContentRootPath, "uploads", request.FileName));
+                }
+                
                 else
                     await _repository.UpdateTaskStatusAsync(request.Id, EventStatus.Failed,
                         JsonConvert.SerializeObject(request));

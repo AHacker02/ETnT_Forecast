@@ -6,6 +6,8 @@ using System.Text;
 using AutoWrapper;
 using BaseService.Extensions;
 using DataAccess;
+using Hangfire;
+using Hangfire.PostgreSql;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -60,7 +62,7 @@ namespace BaseService
             });
 
             services.AddLogging();
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddAutoMapper(AppDomain.CurrentDomain.Load("Service"));
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -110,6 +112,14 @@ namespace BaseService
                 options.UseNpgsql(Configuration["postgres:connectionString"]));
 
             services.AddMediatR(AppDomain.CurrentDomain.Load("Service"));
+
+            services.AddHangfire(configuration =>
+            {
+                configuration.UsePostgreSqlStorage(Configuration["postgres:connectionString"]);
+                configuration.UseMediatR();
+            });
+
+            services.AddHangfireServer();
 
 
             //TODO:Add SeriLog

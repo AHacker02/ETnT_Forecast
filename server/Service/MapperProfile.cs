@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Common.Commands;
 using Common.Models;
 using DataAccess.DbSets;
 
@@ -15,6 +16,8 @@ namespace Service
 
             CreateMap<TaskStatusViewModel, EventData>()
                 .ReverseMap();
+
+            CreateMap<ForecastCommandError, ForecastCommand>().ReverseMap();
         }
     }
 

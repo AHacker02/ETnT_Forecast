@@ -8,19 +8,20 @@ using MediatR;
 
 namespace Service.QueryHandlers
 {
-    public class GetLookupDataHandler:IRequestHandler<GetLookupQuery,LookupViewModel>
+    public class GetLookupDataHandler : IRequestHandler<GetLookupQuery, LookupViewModel>
     {
-        private readonly ILookupRepository _lookupRepository;
         private readonly IForecastRepository _forecastRepository;
+        private readonly ILookupRepository _lookupRepository;
 
-        public GetLookupDataHandler(ILookupRepository lookupRepository,IForecastRepository forecastRepository)
+        public GetLookupDataHandler(ILookupRepository lookupRepository, IForecastRepository forecastRepository)
         {
             _lookupRepository = lookupRepository;
             _forecastRepository = forecastRepository;
         }
 
         public async Task<LookupViewModel> Handle(GetLookupQuery request, CancellationToken cancellationToken)
-            => new LookupViewModel()
+        {
+            return new LookupViewModel
             {
                 Orgs = await _lookupRepository.GetAll<Org>(),
                 Users = await _lookupRepository.GetAll<User>(),
@@ -31,5 +32,6 @@ namespace Service.QueryHandlers
                 ForecastConfidence = await _lookupRepository.GetAll<Category>(),
                 FyYears = await _forecastRepository.GetAllYears()
             };
+        }
     }
 }

@@ -49,11 +49,14 @@ namespace DataAccess
 
         public async Task<User> GetUserByNameAsync(string name)
         {
-            return await _context.Users.FirstOrDefaultAsync(x => x.FullName == name).ConfigureAwait(false);
+            return await _context.Users.FirstOrDefaultAsync(x => x.FirstName + " " + x.LastName == name)
+                .ConfigureAwait(false);
         }
 
         public async Task<EventData> GetEventByIdAsync(Guid id)
-            => await _context.Task.FindAsync(id);
+        {
+            return await _context.Task.FindAsync(id);
+        }
 
         public async Task AddTaskAsync(EventData @event)
         {
@@ -69,7 +72,9 @@ namespace DataAccess
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAll<T>() where T : class 
-            => await _context.Set<T>().ToListAsync();
+        public async Task<IEnumerable<T>> GetAll<T>() where T : class
+        {
+            return await _context.Set<T>().ToListAsync();
+        }
     }
 }

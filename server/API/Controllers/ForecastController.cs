@@ -1,11 +1,14 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AutoWrapper.Wrappers;
+using Common;
 using Common.Commands;
 using Common.Query;
 using MediatR;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,11 +18,13 @@ namespace api.Controllers
     [ApiController]
     public class ForecastController : ControllerBase
     {
+        private readonly IWebHostEnvironment _environment;
         private readonly IMediator _mediator;
 
-        public ForecastController(IMediator mediator)
+        public ForecastController(IMediator mediator, IWebHostEnvironment environment)
         {
             _mediator = mediator;
+            _environment = environment;
         }
 
         /// <summary>
@@ -32,8 +37,8 @@ namespace api.Controllers
             var response = await _mediator.Send(new GetForecastsByFyYearQuery(fyYear));
             return response.Any()
                 ? new ApiResponse(response)
-                : new ApiResponse(statusCode: (int) HttpStatusCode.NoContent,
-                    message: $"No Records Found for Year:{fyYear}");
+                : new ApiResponse((int) HttpStatusCode.NoContent,
+                    $"No Records Found for Year:{fyYear}");
         }
 
         /// <summary>
@@ -66,17 +71,20 @@ namespace api.Controllers
         [HttpPost("upload")]
         public async Task<ApiResponse> UploadFile([FromForm] IFormFile file)
         {
-            var command = new FileUploadCommand
+            var uploads = Path.Combine(_environment.ContentRootPath, "uploads");
+            if (!Directory.Exists(uploads)) Directory.CreateDirectory(uploads);
+            var fileName = $"{DateTime.UtcNow:yyyy-M-d}_{Guid.NewGuid()}.xlsx";
+            await using (Stream fileStream = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
             {
-                Id = Guid.NewGuid(),
-                FileName = file.Name
-            };
-            await file.CopyToAsync(command.File);
-            _mediator.Publish(command);
+                await file.CopyToAsync(fileStream);
+            }
+
+            var command = new FileUploadCommand(fileName);
+            _mediator.Enqueue(command);
 
             return new ApiResponse(command.Id);
         }
-        
+
         [HttpGet("task/{id:guid}")]
         public async Task<ApiResponse> GetTaskStatus(Guid id)
         {

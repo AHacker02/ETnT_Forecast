@@ -18,6 +18,9 @@ namespace DataAccess
             SeedBusinessUnits();
             SeedCapabilities();
             SeedCategory();
+            SeedUser();
+            SeedProject();
+            SeedOrg();
             _db.SaveChanges();
         }
 
@@ -94,6 +97,35 @@ namespace DataAccess
             _db.Categories.Add(new Category("Firm Commitment"));
             _db.Categories.Add(new Category("Soft Commitment"));
             _db.Categories.Add(new Category("Distant Opportunity"));
+        }
+
+        private void SeedOrg()
+        {
+            if (_db.Orgs.Any()) return;
+            _db.Orgs.Add(new Org("Aviation Biz Ops(BGS)"));
+            _db.Orgs.Add(new Org("BT&E Software"));
+            _db.Orgs.Add(new Org("Flight Domain(BGS)"));
+            _db.Orgs.Add(new Org("Tech Solutions"));
+            _db.Orgs.Add(new Org("Digital Solutions(BGS)"));
+            _db.Orgs.Add(new Org("Embedded Software"));
+            _db.Orgs.Add(new Org("Emerging Projects(BGS)"));
+        }
+
+        private void SeedProject()
+        {
+            if (_db.Projects.Any()) return;
+            _db.Projects.Add(new Project("Project 1"));
+            _db.Projects.Add(new Project("Project 2"));
+            _db.Projects.Add(new Project("Project 3"));
+        }
+
+        private void SeedUser()
+        {
+            if (_db.Users.Any()) return;
+            _db.Users.Add(new User {FirstName = "Manager", LastName = "One"});
+            _db.Users.Add(new User {FirstName = "Manager", LastName = "Two"});
+            _db.Users.Add(new User {FirstName = "USFocal", LastName = "Two"});
+            _db.Users.Add(new User {FirstName = "USFocal", LastName = "One"});
         }
     }
 }
