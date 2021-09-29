@@ -20,7 +20,7 @@ const createCustomAxios = () => {
 const customAxios = createCustomAxios();
 
 const successHandler = (response) => {
-    if (!response.data.isSuccess) {
+    if ("isError" in response.data && response.data.isError) {
         return Promise.reject({
             response: response,
             message: response.data.message,

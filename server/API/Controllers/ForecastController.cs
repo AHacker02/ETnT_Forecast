@@ -31,7 +31,7 @@ namespace api.Controllers
         ///     Get All Forecasts by FyYear
         /// </summary>
         /// <returns></returns>
-        [HttpGet("{fyYear}")]
+        [HttpGet("{fyYear:int}")]
         public async Task<ApiResponse> GetAllForecastByFyYear(int fyYear)
         {
             var response = await _mediator.Send(new GetForecastsByFyYearQuery(fyYear));

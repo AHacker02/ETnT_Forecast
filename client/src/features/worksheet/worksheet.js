@@ -4,8 +4,17 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import './worksheet.css';
 import {useDispatch, useSelector} from "react-redux";
-import {getForecast, selectForecast, setColValue} from "./worksheetSlice";
-
+import {
+    getForecast, selectBusiness,
+    selectCapability, selectCategory,
+    selectForecast,
+    selectOrgs,
+    selectProjects, selectSkills,
+    selectUsers,
+    setColValue
+} from "./worksheetSlice";
+import {Dropdown} from "semantic-ui-react";
+import DropDownCell from "./dropdownCell/dropDownCell";
 
 const Worksheet = forwardRef((props, ref) => {
     const forecast = useSelector(selectForecast);
@@ -22,10 +31,10 @@ const Worksheet = forwardRef((props, ref) => {
             }
         }),
     )
-    useEffect(()=>{
+    useEffect(() => {
         setRowData(forecast);
         autoSizeAll();
-    },[forecast]);
+    }, [forecast]);
 
     const autoSizeAll = (skipHeader) => {
         var allColumnIds = [];
@@ -39,26 +48,25 @@ const Worksheet = forwardRef((props, ref) => {
         console.log(params);
         setGridApi(params.api);
         setGridColumnApi(params.columnApi);
-        dispatch(getForecast());
     };
 
     const onBtExport = () => {
         gridApi.exportDataAsExcel();
     };
     const valueSetters = params => {
-        dispatch(setColValue({id:params.data.id, key:params.colDef.field, value:params.newValue}))
+        dispatch(setColValue({id: params.data.id, key: params.colDef.field, value: params.newValue}))
     };
 
     const columnDef = [
-        {headerName: "ET&T Org", field: 'org'},
-        {headerName: "Manager", field: 'manager'},
-        {headerName: "US Focal", field: 'usFocal'},
-        {headerName: "Project", field: 'project'},
-        {headerName: "Skill Group", field: 'skillGroup'},
-        {headerName: "Business Unit", field: 'business'},
-        {headerName: "Capabilities", field: 'capability'},
+        {headerName: "ET&T Org", field: 'org', cellRenderer: 'dropDownRenderer', cellRendererParams: {options: useSelector(selectOrgs)},editable:false},
+        {headerName: "Manager", field: 'manager', cellRenderer: 'dropDownRenderer', cellRendererParams: {options: useSelector(selectUsers)},editable:false},
+        {headerName: "US Focal", field: 'usFocal', cellRenderer: 'dropDownRenderer', cellRendererParams: {options: useSelector(selectUsers)},editable:false},
+        {headerName: "Project", field: 'project', cellRenderer: 'dropDownRenderer', cellRendererParams: {options: useSelector(selectProjects)},editable:false},
+        {headerName: "Skill Group", field: 'skillGroup', cellRenderer: 'dropDownRenderer', cellRendererParams: {options: useSelector(selectSkills)},editable:false},
+        {headerName: "Business Unit", field: 'business', cellRenderer: 'dropDownRenderer', cellRendererParams: {options: useSelector(selectBusiness)},editable:false},
+        {headerName: "Capabilities", field: 'capability', cellRenderer: 'dropDownRenderer', cellRendererParams: {options: useSelector(selectCapability)},editable:false},
         {headerName: "Chargeline", field: 'chargeLine'},
-        {headerName: "Forecast Confidence", field: 'forecastConfidence'},
+        {headerName: "Forecast Confidence", field: 'forecastConfidence', cellRenderer: 'dropDownRenderer', cellRendererParams: {options: useSelector(selectCategory)},editable:false},
         {headerName: "Comments", field: 'comments'},
         {headerName: "Jan", field: 'jan'},
         {headerName: "Feb", field: 'feb'},
@@ -74,15 +82,21 @@ const Worksheet = forwardRef((props, ref) => {
         {headerName: "Dec", field: 'dec'},
     ]
 
-    const onCellEditingStopped=(e)=> {
+    const onCellEditingStopped = (e) => {
         props.setIsDirty(true);
     }
-    const defaultColumnDef = {sortable: true, filter: true, editable: true,valueSetter:valueSetters}
+    const defaultColumnDef = {sortable: true, filter: true, editable: true, valueSetter: valueSetters}
     return (
         <div className="container">
             <div className="ag-theme-alpine fullwidth-grid">
-                <AgGridReact onGridReady={onGridReady} columnDefs={columnDef} rowData={rowData}
-                             defaultColDef={defaultColumnDef} onCellEditingStopped={onCellEditingStopped}/>
+                <AgGridReact
+                    onGridReady={onGridReady}
+                    columnDefs={columnDef}
+                    rowData={rowData}
+                    defaultColDef={defaultColumnDef}
+                    onCellEditingStopped={onCellEditingStopped}
+                    frameworkComponents={{dropDownRenderer: DropDownCell}}
+                />
             </div>
         </div>
     );
