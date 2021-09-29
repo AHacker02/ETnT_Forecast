@@ -42,8 +42,7 @@ namespace Service.CommandHandlers
                 }
 
                 var forecast = await _forecastRepository
-                    .AddUpdateForecastAsync(
-                        forecastRequest.Org, forecastRequest.Manager, forecastRequest.USFocal,
+                    .AddUpdateForecastAsync(forecastRequest.Id, forecastRequest.Org, forecastRequest.Manager, forecastRequest.USFocal,
                         forecastRequest.Project, forecastRequest.SkillGroup, forecastRequest.Business,
                         forecastRequest.Capability, forecastRequest.Chargeline, forecastRequest.ForecastConfidence,
                         forecastRequest.Comments).ConfigureAwait(false);

@@ -13,6 +13,7 @@ namespace DataAccess.Abstractions
         ///     Add new Forecast or Update existing
         ///     Unique constraint - org, project, skill, business, capability
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="orgName"></param>
         /// <param name="managerName"></param>
         /// <param name="usFocalName"></param>
@@ -24,8 +25,8 @@ namespace DataAccess.Abstractions
         /// <param name="forecastConfidenceValue"></param>
         /// <param name="comments"></param>
         /// <returns></returns>
-        Task<Forecast> AddUpdateForecastAsync(
-            string orgName, string managerName, string usFocalName, string projectName,
+        Task<Forecast> AddUpdateForecastAsync(Guid id, string orgName, string managerName, string usFocalName,
+            string projectName,
             string skillName, string businessUnitName, string capabilityName, string chargeline,
             string forecastConfidenceValue, string comments);
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using FluentValidation.Results;
 
@@ -5,6 +6,7 @@ namespace Common.Commands
 {
     public class ForecastCommand
     {
+        public Guid Id { get; set; }
         public string Org { get; set; }
         public string Manager { get; set; }
         public string USFocal { get; set; }

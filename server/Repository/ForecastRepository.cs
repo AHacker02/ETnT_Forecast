@@ -19,7 +19,8 @@ namespace DataAccess
             _lookupRepository = lookupRepository;
         }
 
-        public async Task<Forecast> AddUpdateForecastAsync(string orgName, string managerName, string usFocalName,
+        public async Task<Forecast> AddUpdateForecastAsync(Guid id, string orgName, string managerName,
+            string usFocalName,
             string projectName,
             string skillName, string businessUnitName, string capabilityName, string chargeline,
             string forecastConfidenceValue, string comments)
@@ -34,11 +35,12 @@ namespace DataAccess
             var forecastConfidence = await _lookupRepository.GetCategoryByNameAsync(forecastConfidenceValue)
                 .ConfigureAwait(false);
             var forecast = _context.Forecasts.FirstOrDefault(x =>
-                x.Org == org
-                && x.Project == project
-                && x.SkillGroup == skill
-                && x.Business == businessUnit
-                && x.Capability == capability
+                x.Id == id
+                || (x.Org == org
+                    && x.Project == project
+                    && x.SkillGroup == skill
+                    && x.Business == businessUnit
+                    && x.Capability == capability)
             );
 
             if (forecast == null)
@@ -54,6 +56,12 @@ namespace DataAccess
                 forecast.Chargeline = chargeline;
                 forecast.ForecastConfidence = forecastConfidence;
                 forecast.Comments = comments;
+                forecast.Org = org;
+                forecast.Project = project;
+                forecast.SkillGroup = skill;
+                forecast.Business = businessUnit;
+                forecast.Capability = capability;
+                forecast.UpdatedAt = DateTime.Now;
             }
 
             return forecast;

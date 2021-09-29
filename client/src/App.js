@@ -5,21 +5,28 @@ import {useDispatch, useSelector} from "react-redux";
 import {
     getForecast,
     getLookupData,
-    saveForecast,
-    selectFyYears, selectSelectedYear, setSelectedYear,
+    saveForecast, selectAppState,
+    selectFyYears, selectSelectedYear, setAppState, setSelectedYear,
     uploadForecast
 } from "./features/worksheet/worksheetSlice";
 import {Dropdown} from "semantic-ui-react";
 
+
+const saveButton = () => {
+
+}
+
 function App() {
     const worksheetRef = useRef();
     const dispatch = useDispatch();
-    const [isDirty, setIsDirty] = useState(false);
+    const {saving, uploading} = useSelector(selectAppState);
     const fyYears = useSelector(selectFyYears);
     const selectedYear = useSelector(selectSelectedYear)
+    const [isDirty, setIsDirty] = useState(false);
 
     const onFileChange = event => {
         if (event.target.files[0]) {
+            dispatch(setAppState({key: 'uploading', value: true}))
             dispatch(uploadForecast(event.target.files[0]));
         }
     };
@@ -27,6 +34,12 @@ function App() {
     const handleItemClick = (_e, x) => {
         dispatch(setSelectedYear(x.value));
     };
+
+    const handleSaveClick = () => {
+        debugger;
+        dispatch(setAppState({key: 'saving', value: true}));
+        dispatch(saveForecast());
+    }
 
     useEffect(() => {
         dispatch(getLookupData())
@@ -73,18 +86,37 @@ function App() {
                         }
                     </Dropdown.Menu>
                 </Dropdown>
-                <div className="ui item">
-                    <i className="save icon large" onClick={() => {
-                        dispatch(saveForecast())
-                    }}></i>
+                <div className="ui item clickable">
+                    {saving
+                        ? (
+                            <div className="ui active dimmer inverted">
+                                <div className="ui loader"></div>
+                            </div>
+                        )
+                        : (
+                            <i className="save icon large" onClick={handleSaveClick}></i>
+                        )
+
+                    }
                 </div>
-                <div className="ui item">
+                <div className="ui item clickable">
                     <i className="download icon large no-left-margin" onClick={() => {
                         worksheetRef.current.onBtExport()
                     }}></i>
                 </div>
-                <div className="ui item">
-                    <i className="upload icon large" onClick={() => document.getElementById("upload").click()}></i>
+                <div className="ui item clickable">
+                    {uploading
+                        ? (
+                            <div className="ui active dimmer inverted">
+                                <div className="ui loader"></div>
+                            </div>
+                        )
+                        : (
+                            <i className="upload icon large"
+                               onClick={() => document.getElementById("upload").click()}/>
+                        )
+
+                    }
                     <input id="upload" type="file" onChange={onFileChange} hidden/>
                 </div>
             </div>

@@ -1,7 +1,8 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import _ from "lodash";
 import api from "../../utils/api";
-import {FORECAST, LOOKUP, UPLOAD} from "../../utils/endpoints";
+import {FORECAST, LOOKUP, TASK, UPLOAD} from "../../utils/endpoints";
+import exportFromJSON from "export-from-json";
 
 let cancelToken;
 const INITIAL_VALUE = {
@@ -15,6 +16,10 @@ const INITIAL_VALUE = {
     capabilities: [],
     forecastConfidence: [],
     fyYears: [],
+    app: {
+        saving: false,
+        uploading: false
+    }
 }
 
 export const getForecast = createAsyncThunk(
@@ -34,7 +39,7 @@ export const getLookupData = createAsyncThunk(
 )
 
 export const uploadForecast = createAsyncThunk("forecast/upload",
-    async (file) => {
+    async (file, thunkAPI) => {
         const formData = new FormData();
         formData.append("file", file);
         const response = await api.post(UPLOAD, formData, {
@@ -42,12 +47,12 @@ export const uploadForecast = createAsyncThunk("forecast/upload",
                 'Content-Type': 'multipart/form-data'
             }
         });
+        thunkAPI.dispatch(getTaskStatus(response.data.result));
         return response.data.result;
     })
 
 export const saveForecast = createAsyncThunk("forecast/save",
     async (_, thunkAPI) => {
-        debugger;
         const response = await api.post(
             FORECAST,
             JSON.stringify(
@@ -56,8 +61,27 @@ export const saveForecast = createAsyncThunk("forecast/save",
                         .filter(x => x.isEdited)
                         .map(x => ({...x, year: thunkAPI.getState().worksheet.selectedYear}))
                 }));
+        thunkAPI.dispatch(setAppState({key: 'saving', value: true}));
         return response.data.result;
     })
+
+export const getTaskStatus = createAsyncThunk("forecast/taskStatus",
+    async (taskId, thunkAPI) => {
+        let response = await api.get(TASK + taskId);
+        while (!response.data.result || !['Completed', 'Failed'].includes(response.data.result.status)) {
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            response = await api.get(TASK + taskId)
+        }
+        thunkAPI.dispatch(setAppState({key: 'uploading', value: false}));
+        thunkAPI.dispatch(getForecast(thunkAPI.getState().worksheet.selectedYear))
+        if (response.data.result.message) {
+            const data = response.data.result.message;
+            const type= exportFromJSON.types.xls;
+            const fileName = 'error';
+            exportFromJSON({data,fileName,type })
+        }
+    }
+)
 
 export const worksheetSlice = createSlice({
     name: "forecast",
@@ -66,16 +90,18 @@ export const worksheetSlice = createSlice({
         setColValue: (state, action) => {
             const rowId = action.payload.id;
             const forecast = state.forecast.filter(x => x.id == rowId)[0];
-            if(['chargeLine','comments'].includes(action.payload.key)){
+            if (['chargeLine', 'comments'].includes(action.payload.key)) {
                 forecast[action.payload.key] = action.payload.value;
-            }
-            else {
+            } else {
                 forecast[action.payload.key] = parseInt(action.payload.value);
             }
             forecast["isEdited"] = true;
         },
         setSelectedYear: (state, action) => {
             state.selectedYear = action.payload;
+        },
+        setAppState: (state, action) => {
+            state.app[action.payload.key] = action.payload.value;
         }
     },
     extraReducers: {
@@ -97,7 +123,7 @@ export const worksheetSlice = createSlice({
     }
 });
 
-export const {setColValue, setSelectedYear} = worksheetSlice.actions;
+export const {setColValue, setSelectedYear, setAppState} = worksheetSlice.actions;
 export const selectForecast = (state) => state.worksheet.forecast;
 export const selectFyYears = (state) => state.worksheet.fyYears;
 export const selectSelectedYear = (state) => state.worksheet.selectedYear;
@@ -108,4 +134,5 @@ export const selectSkills = (state) => state.worksheet.skills;
 export const selectBusiness = (state) => state.worksheet.business;
 export const selectCapability = (state) => state.worksheet.capabilities;
 export const selectCategory = (state) => state.worksheet.forecastConfidence;
+export const selectAppState = (state) => state.worksheet.app;
 export default worksheetSlice.reducer;

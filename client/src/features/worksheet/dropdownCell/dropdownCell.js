@@ -3,11 +3,11 @@ import {Autocomplete, TextField} from "@mui/material";
 import {setColValue} from "../worksheetSlice";
 import {useDispatch, useSelector} from "react-redux";
 import _ from "lodash"
+import './dropdownCell.css'
 
-const DropDownCell = (props) => {
+const DropdownCell = (props) => {
     const [inputValue, setInputValue] = useState('');
     const dispatch = useDispatch();
-    console.log(props)
 
     function onChangeHandler(e, value) {
         dispatch(setColValue({id: props.data.id, key: props.colDef.field, value: value}))
@@ -19,7 +19,8 @@ const DropDownCell = (props) => {
 
     return (
         <Autocomplete
-            options={props.options.map(x=>_.defaultTo(x.value,x.fullName))}
+            options={props.options.map(x => _.defaultTo(x.value, x.fullName))}
+            freeSolo
             value={props.value}
             onChange={onChangeHandler}
             inputValue={inputValue}
@@ -30,10 +31,14 @@ const DropDownCell = (props) => {
                     {...params}
                     style={{padding: '5px 0'}}
                     placeholder={'Select ' + props.column.colId}
+                    sx={{padding:0}}
                 />
             )}
+            sx={{
+                padding:0
+            }}
         />
     );
 };
 
-export default DropDownCell;
+export default DropdownCell;
