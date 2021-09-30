@@ -18,7 +18,8 @@ const INITIAL_VALUE = {
     fyYears: [],
     app: {
         saving: false,
-        uploading: false
+        uploading: false,
+        selectedRow:""
     }
 }
 
@@ -59,11 +60,18 @@ export const saveForecast = createAsyncThunk("forecast/save",
                 {
                     forecasts: thunkAPI.getState().worksheet.forecast
                         .filter(x => x.isEdited)
-                        .map(x => ({...x, year: thunkAPI.getState().worksheet.selectedYear}))
+                        .map(x => ({...x, year: thunkAPI.getState().worksheet.selectedYear.toString()}))
                 }));
-        thunkAPI.dispatch(setAppState({key: 'saving', value: true}));
+        thunkAPI.dispatch(setAppState({key: 'saving', value: false}));
         return response.data.result;
     })
+
+export const deleteForecast = createAsyncThunk("forecast/delete", async (_, thunkAPI) => {
+    const year = thunkAPI.getState().worksheet.selectedYear;
+    const forecastId = thunkAPI.getState().worksheet.app.selectedRow;
+    const response = await api.delete(FORECAST+`/${forecastId}/year/${year}`);
+    thunkAPI.dispatch(getForecast(year))
+})
 
 export const getTaskStatus = createAsyncThunk("forecast/taskStatus",
     async (taskId, thunkAPI) => {
@@ -76,9 +84,9 @@ export const getTaskStatus = createAsyncThunk("forecast/taskStatus",
         thunkAPI.dispatch(getForecast(thunkAPI.getState().worksheet.selectedYear))
         if (response.data.result.message) {
             const data = response.data.result.message;
-            const type= exportFromJSON.types.xls;
+            const type = exportFromJSON.types.xls;
             const fileName = 'error';
-            exportFromJSON({data,fileName,type })
+            exportFromJSON({data, fileName, type})
         }
     }
 )
@@ -90,12 +98,10 @@ export const worksheetSlice = createSlice({
         setColValue: (state, action) => {
             const rowId = action.payload.id;
             const forecast = state.forecast.filter(x => x.id == rowId)[0];
-            if (['chargeLine', 'comments'].includes(action.payload.key)) {
+            if(forecast) {
                 forecast[action.payload.key] = action.payload.value;
-            } else {
-                forecast[action.payload.key] = parseInt(action.payload.value);
+                forecast["isEdited"] = true;
             }
-            forecast["isEdited"] = true;
         },
         setSelectedYear: (state, action) => {
             state.selectedYear = action.payload;

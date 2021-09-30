@@ -38,7 +38,7 @@ namespace DataAccess.Abstractions
         /// <returns></returns>
         Task AddReplaceForecastDataAsync(ForecastData forecastData);
 
-        Task DeleteForecastAsync(Guid id);
+        Task DeleteForecastAsync(Guid id, int year);
 
         /// <summary>
         ///     Get all years for which data is available

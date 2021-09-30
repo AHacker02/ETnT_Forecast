@@ -120,9 +120,13 @@ namespace DataAccess
             return await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        public async Task DeleteForecastAsync(Guid id)
+        public async Task DeleteForecastAsync(Guid id, int year)
         {
-            _context.Forecasts.Remove(await _context.Forecasts.FirstOrDefaultAsync(x => x.Id == id));
+            var forecast = await _context.Forecasts.FirstOrDefaultAsync(x => x.Id == id);
+            _context.ForecastData.Remove(
+                _context.ForecastData.FirstOrDefault(x => x.Year == year && x.Forecast.Id == id));
+            if (!forecast.ForecastData.Any())
+                _context.Forecasts.Remove(forecast);
         }
     }
 }

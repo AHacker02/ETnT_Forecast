@@ -68,19 +68,18 @@ namespace Service.CommandHandlers
                             Chargeline = worksheet.Cells[row, 9].Text,
                             ForecastConfidence = worksheet.Cells[row, 10].Text,
                             Comments = worksheet.Cells[row, 11 * i].Text,
-                            Jan = string.IsNullOrWhiteSpace(worksheet.Cells[row, 12 * i].Text)?0:Convert.ToDecimal(worksheet.Cells[row, 12 * i].Text),
-                            Feb = string.IsNullOrWhiteSpace(worksheet.Cells[row, 13 * i].Text)?0:Convert.ToDecimal(worksheet.Cells[row, 13 * i].Text),
-                            Mar = string.IsNullOrWhiteSpace(worksheet.Cells[row, 14 * i].Text)?0:Convert.ToDecimal(worksheet.Cells[row, 14 * i].Text),
-                            Apr = string.IsNullOrWhiteSpace(worksheet.Cells[row, 15 * i].Text)?0:Convert.ToDecimal(worksheet.Cells[row, 15 * i].Text),
-                            May = string.IsNullOrWhiteSpace(worksheet.Cells[row, 16 * i].Text)?0:Convert.ToDecimal(worksheet.Cells[row, 16 * i].Text),
-                            June = string.IsNullOrWhiteSpace(worksheet.Cells[row, 17 * i].Text)?0:Convert.ToDecimal(worksheet.Cells[row, 17 * i].Text),
-                            July = string.IsNullOrWhiteSpace(worksheet.Cells[row, 18 * i].Text)?0:Convert.ToDecimal(worksheet.Cells[row, 18 * i].Text),
-                            Sep = string.IsNullOrWhiteSpace(worksheet.Cells[row, 19 * i].Text)?0:Convert.ToDecimal(worksheet.Cells[row, 19 * i].Text),
-                            Oct = string.IsNullOrWhiteSpace(worksheet.Cells[row, 20 * i].Text)?0:Convert.ToDecimal(worksheet.Cells[row, 20 * i].Text),
-                            Nov = string.IsNullOrWhiteSpace(worksheet.Cells[row, 21 * i].Text)?0:Convert.ToDecimal(worksheet.Cells[row, 21 * i].Text),
-                            Dec = string.IsNullOrWhiteSpace(worksheet.Cells[row, 22 * i].Text)?0:Convert.ToDecimal(worksheet.Cells[row, 22 * i].Text),
-                            Year = Convert.ToInt32(
-                                $"{DateTime.Today.Year.ToString().Substring(0, 2)}{worksheet.Cells[1, 12 * i].Text.Split("-")[1]}")
+                            Jan = worksheet.Cells[row, 12 * i].Text,
+                            Feb = worksheet.Cells[row, 13 * i].Text,
+                            Mar = worksheet.Cells[row, 14 * i].Text,
+                            Apr = worksheet.Cells[row, 15 * i].Text,
+                            May = worksheet.Cells[row, 16 * i].Text,
+                            June = worksheet.Cells[row, 17 * i].Text,
+                            July = worksheet.Cells[row, 18 * i].Text,
+                            Sep = worksheet.Cells[row, 19 * i].Text,
+                            Oct = worksheet.Cells[row, 20 * i].Text,
+                            Nov = worksheet.Cells[row, 21 * i].Text,
+                            Dec = worksheet.Cells[row, 22 * i].Text,
+                            Year = $"{DateTime.Today.Year.ToString().Substring(0, 2)}{worksheet.Cells[1, 12 * i].Text.Split("-")[1]}"
                         });
 
                     row++;
