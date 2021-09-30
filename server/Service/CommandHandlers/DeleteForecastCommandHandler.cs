@@ -17,7 +17,7 @@ namespace Service.CommandHandlers
 
         public async Task<bool> Handle(DeleteForecastCommand request, CancellationToken cancellationToken)
         {
-            await _forecastRepository.DeleteForecastAsync(request.Id).ConfigureAwait(false);
+            await _forecastRepository.DeleteForecastAsync(request.Id,request.Year).ConfigureAwait(false);
             return await _forecastRepository.SaveChangesAsync() > 0;
         }
     }

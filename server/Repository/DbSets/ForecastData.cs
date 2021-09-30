@@ -1,4 +1,6 @@
-﻿namespace DataAccess.DbSets
+﻿using System;
+
+namespace DataAccess.DbSets
 {
     public class ForecastData : BaseEntity
     {
@@ -6,23 +8,23 @@
         {
         }
 
-        public ForecastData(Forecast forecast, decimal jan, decimal feb, decimal mar, decimal apr, decimal may,
-            decimal june, decimal july, decimal aug, decimal sep, decimal oct, decimal nov, decimal dec, int year)
+        public ForecastData(Forecast forecast, string jan, string feb, string mar, string apr, string may,
+            string june, string july, string aug, string sep, string oct, string nov, string dec, string year)
         {
             Forecast = forecast;
-            Jan = jan;
-            Feb = feb;
-            Mar = mar;
-            Apr = apr;
-            May = may;
-            June = june;
-            July = july;
-            Aug = aug;
-            Sep = sep;
-            Oct = oct;
-            Nov = nov;
-            Dec = dec;
-            Year = year;
+            Jan = Convert.ToDecimal(jan);
+            Feb = Convert.ToDecimal(feb);
+            Mar = Convert.ToDecimal(mar);
+            Apr = Convert.ToDecimal(apr);
+            May = Convert.ToDecimal(may);
+            June = Convert.ToDecimal(june);
+            July = Convert.ToDecimal(july);
+            Aug = Convert.ToDecimal(aug);
+            Sep = Convert.ToDecimal(sep);
+            Oct = Convert.ToDecimal(oct);
+            Nov = Convert.ToDecimal(nov);
+            Dec = Convert.ToDecimal(dec);
+            Year = Convert.ToInt32(year);
         }
 
         public Forecast Forecast { get; set; }

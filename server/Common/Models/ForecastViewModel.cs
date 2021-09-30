@@ -15,17 +15,17 @@ namespace Common.Models
         public string Chargeline { get; set; }
         public string ForecastConfidence { get; set; }
         public string Comments { get; set; }
-        public decimal Jan { get; set; }
-        public decimal Feb { get; set; }
-        public decimal Mar { get; set; }
-        public decimal Apr { get; set; }
-        public decimal May { get; set; }
-        public decimal June { get; set; }
-        public decimal July { get; set; }
-        public decimal Aug { get; set; }
-        public decimal Oct { get; set; }
-        public decimal Sep { get; set; }
-        public decimal Nov { get; set; }
-        public decimal Dec { get; set; }
+        public string Jan { get; set; }
+        public string Feb { get; set; }
+        public string Mar { get; set; }
+        public string Apr { get; set; }
+        public string May { get; set; }
+        public string June { get; set; }
+        public string July { get; set; }
+        public string Aug { get; set; }
+        public string Oct { get; set; }
+        public string Sep { get; set; }
+        public string Nov { get; set; }
+        public string Dec { get; set; }
     }
 }

@@ -56,14 +56,14 @@ namespace api.Controllers
         }
 
         /// <summary>
-        ///     Delete forecast by id
+        ///     Delete forecast by id and fyyear
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpDelete("{id:guid}")]
-        public async Task<ApiResponse> DeleteForecast(Guid id)
+        [HttpDelete("{id:guid}/year/{year:int}")]
+        public async Task<ApiResponse> DeleteForecast(Guid id,int year)
         {
-            return await _mediator.Send(new DeleteForecastCommand(id))
+            return await _mediator.Send(new DeleteForecastCommand(id,year))
                 ? new ApiResponse()
                 : new ApiResponse((int) HttpStatusCode.NotFound, $"Forecast {id} not found");
         }
