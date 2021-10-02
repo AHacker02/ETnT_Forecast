@@ -36,7 +36,7 @@ namespace api.Controllers
         {
             var response = await _mediator.Send(new GetForecastsByFyYearQuery(fyYear));
             return response.Any()
-                ? new ApiResponse(response)
+                ? new ApiResponse(response.OrderBy(x=>x.Id))
                 : new ApiResponse((int) HttpStatusCode.NoContent,
                     $"No Records Found for Year:{fyYear}");
         }
@@ -50,8 +50,8 @@ namespace api.Controllers
         public async Task<ApiResponse> AddForecasts(AddUpdateForecastCommand forecasts)
         {
             var response = await _mediator.Send(forecasts);
-            return response is int
-                ? new ApiResponse(response)
+            return !response.Any()
+                ? new ApiResponse()
                 : new ApiResponse((int) HttpStatusCode.BadRequest, response);
         }
 

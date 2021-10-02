@@ -1,4 +1,4 @@
-import React, {forwardRef, useCallback, useEffect, useImperativeHandle, useState} from 'react';
+import React, {forwardRef, useEffect, useImperativeHandle, useState} from 'react';
 import {AgGridReact} from "ag-grid-react";
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
@@ -6,15 +6,17 @@ import './worksheet.css';
 import {useDispatch, useSelector} from "react-redux";
 import {
     deleteForecast,
-    getForecast, selectAppState, selectBusiness,
-    selectCapability, selectCategory,
+    selectBusiness,
+    selectCapability,
+    selectCategory,
     selectForecast,
     selectOrgs,
-    selectProjects, selectSkills,
-    selectUsers, setAppState,
+    selectProjects,
+    selectSkills,
+    selectUsers,
+    setAppState,
     setColValue
 } from "./worksheetSlice";
-import {Dropdown} from "semantic-ui-react";
 import DropdownCell from "./dropdownCell/dropdownCell";
 
 const Worksheet = forwardRef((props, ref) => {
@@ -146,7 +148,7 @@ const Worksheet = forwardRef((props, ref) => {
     // Delete row on delete key press
     const onSelectionChanged = () => {
         const id = gridApi.getSelectedRows()[0].id;
-        dispatch(setAppState({key:"selectedRow",value:id}))
+        dispatch(setAppState({key: "selectedRow", value: id}))
     };
 
     const deleteRow = (event) => {

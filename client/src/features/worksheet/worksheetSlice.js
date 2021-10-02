@@ -1,8 +1,8 @@
-import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import _ from "lodash";
 import api from "../../utils/api";
 import {FORECAST, LOOKUP, TASK, UPLOAD} from "../../utils/endpoints";
-import exportFromJSON from "export-from-json";
+import {parse} from "json2csv";
 
 let cancelToken;
 const INITIAL_VALUE = {
@@ -19,7 +19,7 @@ const INITIAL_VALUE = {
     app: {
         saving: false,
         uploading: false,
-        selectedRow:""
+        selectedRow: ""
     }
 }
 
@@ -69,7 +69,7 @@ export const saveForecast = createAsyncThunk("forecast/save",
 export const deleteForecast = createAsyncThunk("forecast/delete", async (_, thunkAPI) => {
     const year = thunkAPI.getState().worksheet.selectedYear;
     const forecastId = thunkAPI.getState().worksheet.app.selectedRow;
-    const response = await api.delete(FORECAST+`/${forecastId}/year/${year}`);
+    const response = await api.delete(FORECAST + `/${forecastId}/year/${year}`);
     thunkAPI.dispatch(getForecast(year))
 })
 
@@ -82,11 +82,19 @@ export const getTaskStatus = createAsyncThunk("forecast/taskStatus",
         }
         thunkAPI.dispatch(setAppState({key: 'uploading', value: false}));
         thunkAPI.dispatch(getForecast(thunkAPI.getState().worksheet.selectedYear))
-        if (response.data.result.message) {
-            const data = response.data.result.message;
-            const type = exportFromJSON.types.xls;
-            const fileName = 'error';
-            exportFromJSON({data, fileName, type})
+        if (response.data.result.status == 'Failed') {
+            const data = JSON.parse(response.data.result.errors);
+            const fields = ['Errors', 'Id', 'Org', 'Manager', 'USFocal', 'Project', 'SkillGroup', 'Business', 'Capability', 'Chargeline', 'ForecastConfidence', 'Comments', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Year']
+            const csv = parse(data, fields);
+            console.log(csv);
+            const url = window.URL
+                .createObjectURL(new Blob([csv]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'error.csv');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     }
 )
@@ -98,7 +106,7 @@ export const worksheetSlice = createSlice({
         setColValue: (state, action) => {
             const rowId = action.payload.id;
             const forecast = state.forecast.filter(x => x.id == rowId)[0];
-            if(forecast) {
+            if (forecast) {
                 forecast[action.payload.key] = action.payload.value;
                 forecast["isEdited"] = true;
             }

@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Common.Commands
 {
-    public class AddUpdateForecastCommand : IRequest<object>
+    public class AddUpdateForecastCommand : IRequest<List<ForecastCommandError>>
     {
         public IEnumerable<ForecastCommand> Forecasts { get; set; }
     }

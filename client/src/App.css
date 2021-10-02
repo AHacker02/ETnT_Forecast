@@ -16,7 +16,7 @@
     background: #0E6EB8 !important;
 }
 
-.ui.inverted.dimmer {
+.ui.dimmer {
     background-color: #0E6EB8 !important;
 }
 
@@ -38,6 +38,11 @@ i.large.icon {
     margin: 0 !important;
 }
 
-.ui.inverted.dimmer{
+.ui.dimmer {
     position: relative;
+}
+
+.ui.item.clickable{
+    max-height: 47px;
+    max-width: 56.77px;
 }

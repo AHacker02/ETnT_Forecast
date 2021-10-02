@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Autocomplete, TextField} from "@mui/material";
 import {setColValue} from "../worksheetSlice";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import _ from "lodash"
 import './dropdownCell.css'
 
@@ -31,11 +31,11 @@ const DropdownCell = (props) => {
                     {...params}
                     style={{padding: '5px 0'}}
                     placeholder={'Select ' + props.column.colId}
-                    sx={{padding:0}}
+                    sx={{padding: 0}}
                 />
             )}
             sx={{
-                padding:0
+                padding: 0
             }}
         />
     );

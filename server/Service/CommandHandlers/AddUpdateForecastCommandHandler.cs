@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -10,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Service.CommandHandlers
 {
-    public class AddUpdateForecastCommandHandler : IRequestHandler<AddUpdateForecastCommand, object>
+    public class AddUpdateForecastCommandHandler : IRequestHandler<AddUpdateForecastCommand, List<ForecastCommandError>>
     {
         private readonly IForecastRepository _forecastRepository;
         private readonly ILookupRepository _lookupRepository;
@@ -26,7 +28,7 @@ namespace Service.CommandHandlers
             _mapper = mapper;
         }
 
-        public async Task<object> Handle(AddUpdateForecastCommand request, CancellationToken cancellationToken)
+        public async Task<List<ForecastCommandError>> Handle(AddUpdateForecastCommand request, CancellationToken cancellationToken)
         {
             var forecastErrorRecords = new List<ForecastCommandError>();
             foreach (var forecastRequest in request.Forecasts)
@@ -36,7 +38,7 @@ namespace Service.CommandHandlers
                 if (!validationResult.IsValid)
                 {
                     var error = _mapper.Map<ForecastCommandError>(forecastRequest);
-                    error.Errors = validationResult.Errors;
+                    error.Errors = validationResult.ToString();
                     forecastErrorRecords.Add(error);
                     continue;
                 }
@@ -55,9 +57,9 @@ namespace Service.CommandHandlers
                     forecastRequest.Year)).ConfigureAwait(false);
             }
 
-            var status = await _forecastRepository.SaveChangesAsync().ConfigureAwait(false);
+            await _forecastRepository.SaveChangesAsync().ConfigureAwait(false);
 
-            return forecastErrorRecords.Any() ? (object) forecastErrorRecords : status;
+            return forecastErrorRecords;
         }
     }
 }

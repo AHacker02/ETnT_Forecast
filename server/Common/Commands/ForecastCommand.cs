@@ -34,6 +34,6 @@ namespace Common.Commands
 
     public class ForecastCommandError : ForecastCommand
     {
-        public List<ValidationFailure> Errors { get; set; }
+        public string Errors { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Common.Commands;
@@ -17,11 +18,11 @@ namespace Service.CommandHandlers
     public class FileUploadCommandHandler : INotificationHandler<FileUploadCommand>
     {
         private readonly IWebHostEnvironment _environment;
-        private readonly IRequestHandler<AddUpdateForecastCommand, object> _forecastRequestHandler;
+        private readonly IRequestHandler<AddUpdateForecastCommand, List<ForecastCommandError>> _forecastRequestHandler;
         private readonly ILookupRepository _repository;
 
         public FileUploadCommandHandler(
-            IRequestHandler<AddUpdateForecastCommand, object> forecastRequestHandler,
+            IRequestHandler<AddUpdateForecastCommand, List<ForecastCommandError>> forecastRequestHandler,
             ILookupRepository repository,
             IWebHostEnvironment environment)
         {
@@ -67,19 +68,20 @@ namespace Service.CommandHandlers
                             Capability = worksheet.Cells[row, 8].Text,
                             Chargeline = worksheet.Cells[row, 9].Text,
                             ForecastConfidence = worksheet.Cells[row, 10].Text,
-                            Comments = worksheet.Cells[row, 11 * i].Text,
-                            Jan = worksheet.Cells[row, 12 * i].Text,
-                            Feb = worksheet.Cells[row, 13 * i].Text,
-                            Mar = worksheet.Cells[row, 14 * i].Text,
-                            Apr = worksheet.Cells[row, 15 * i].Text,
-                            May = worksheet.Cells[row, 16 * i].Text,
-                            June = worksheet.Cells[row, 17 * i].Text,
-                            July = worksheet.Cells[row, 18 * i].Text,
-                            Sep = worksheet.Cells[row, 19 * i].Text,
-                            Oct = worksheet.Cells[row, 20 * i].Text,
-                            Nov = worksheet.Cells[row, 21 * i].Text,
-                            Dec = worksheet.Cells[row, 22 * i].Text,
-                            Year = $"{DateTime.Today.Year.ToString().Substring(0, 2)}{worksheet.Cells[1, 12 * i].Text.Split("-")[1]}"
+                            Comments = worksheet.Cells[row, 11].Text,
+                            Jan = worksheet.Cells[row, (12*i)].Text,
+                            Feb = worksheet.Cells[row, (12*i)+1].Text,
+                            Mar = worksheet.Cells[row, 2 +(12*i)].Text,
+                            Apr = worksheet.Cells[row, 3 +(12*i)].Text,
+                            May = worksheet.Cells[row, 4 +(12*i)].Text,
+                            June = worksheet.Cells[row, 5 +(12*i)].Text,
+                            July = worksheet.Cells[row, 6 +(12*i)].Text,
+                            Aug = worksheet.Cells[row, 7 +(12*i)].Text,
+                            Sep = worksheet.Cells[row, 8 +(12*i)].Text,
+                            Oct = worksheet.Cells[row, 9 +(12*i)].Text,
+                            Nov = worksheet.Cells[row, 10 +(12*i)].Text,
+                            Dec = worksheet.Cells[row, 11 +(12*i)].Text,
+                            Year = $"{DateTime.Today.Year.ToString().Substring(0, 2)}{worksheet.Cells[1, (12*i)].Text.Split("-")[1]}"
                         });
 
                     row++;
@@ -89,7 +91,7 @@ namespace Service.CommandHandlers
                     cancellationToken);
 
 
-                if (response is int)
+                if (!response.Any())
                 {
                     await _repository.UpdateTaskStatusAsync(request.Id, EventStatus.Completed);
                     File.Delete(Path.Combine(_environment.ContentRootPath, "uploads", request.FileName));
@@ -97,7 +99,7 @@ namespace Service.CommandHandlers
                 
                 else
                     await _repository.UpdateTaskStatusAsync(request.Id, EventStatus.Failed,
-                        JsonConvert.SerializeObject(request));
+                        JsonConvert.SerializeObject(response));
             }
             catch (Exception ex)
             {

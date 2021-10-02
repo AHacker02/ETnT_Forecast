@@ -5,8 +5,12 @@ import {useDispatch, useSelector} from "react-redux";
 import {
     getForecast,
     getLookupData,
-    saveForecast, selectAppState,
-    selectFyYears, selectSelectedYear, setAppState, setSelectedYear,
+    saveForecast,
+    selectAppState,
+    selectFyYears,
+    selectSelectedYear,
+    setAppState,
+    setSelectedYear,
     uploadForecast
 } from "./features/worksheet/worksheetSlice";
 import {Dropdown} from "semantic-ui-react";
@@ -36,9 +40,10 @@ function App() {
     };
 
     const handleSaveClick = () => {
-        debugger;
-        dispatch(setAppState({key: 'saving', value: true}));
-        dispatch(saveForecast());
+        if(!saving) {
+            dispatch(setAppState({key: 'saving', value: true}));
+            dispatch(saveForecast());
+        }
     }
 
     useEffect(() => {
@@ -86,15 +91,15 @@ function App() {
                         }
                     </Dropdown.Menu>
                 </Dropdown>
-                <div className="ui item clickable">
+                <div className="ui item clickable" onClick={handleSaveClick}>
                     {saving
                         ? (
-                            <div className="ui active dimmer inverted">
-                                <div className="ui loader"></div>
+                            <div className="ui active dimmer">
+                                <div className="ui loader small"></div>
                             </div>
                         )
                         : (
-                            <i className="save icon large" onClick={handleSaveClick}></i>
+                            <i className="save icon large"/>
                         )
 
                     }
@@ -104,19 +109,20 @@ function App() {
                         worksheetRef.current.onBtExport()
                     }}></i>
                 </div>
-                <div className="ui item clickable">
+                <div className={`ui item ${uploading ? "" : "clickable"}`}
+                     onClick={() => !uploading && document.getElementById("upload").click()}>
                     {uploading
                         ? (
-                            <div className="ui active dimmer inverted">
-                                <div className="ui loader"></div>
+                            <div className="ui active dimmer">
+                                <div className="ui loader small"></div>
                             </div>
                         )
                         : (
-                            <i className="upload icon large"
-                               onClick={() => document.getElementById("upload").click()}/>
+                            <i className="upload icon large"/>
                         )
 
                     }
+
                     <input id="upload" type="file" onChange={onFileChange} hidden/>
                 </div>
             </div>
