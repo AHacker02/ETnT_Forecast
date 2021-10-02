@@ -18,10 +18,6 @@ namespace Service
                 .NotEmpty()
                 .Must(Exists<Org>).WithMessage(NOT_FOUND);
 
-            RuleFor(x => x.Project)
-                .NotEmpty()
-                .Must(Exists<Project>).WithMessage(NOT_FOUND);
-
             RuleFor(x => x.SkillGroup)
                 .NotEmpty()
                 .Must(Exists<Skill>).WithMessage(NOT_FOUND);
