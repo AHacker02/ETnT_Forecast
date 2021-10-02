@@ -1,5 +1,6 @@
 using Autofac;
 using BaseService;
+using DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -30,10 +31,10 @@ namespace api
             builder.RegisterModule(new ServiceModule());
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,Seeder seeder)
         {
             ConfigureApplication(app, env);
-            // seeder.Seed();
+            seeder.Seed();
         }
     }
 }

@@ -35,7 +35,7 @@ namespace DataAccess
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
             if (!options.IsConfigured)
-                options.UseNpgsql("Host=192.168.0.103;Port=5432;Username=postgres;Password=#Iamdevil1;Database=etnt;");
+                options.UseNpgsql("Host=localhost;Port=5432;Username=postgres;Password=#Iamdevil1;Database=etnt;");
         }
     }
 }

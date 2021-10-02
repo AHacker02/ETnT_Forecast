@@ -8,7 +8,7 @@ namespace DataAccess
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<ForecastContext>().InstancePerLifetimeScope();
-            builder.RegisterType<Seeder>().InstancePerLifetimeScope();
+            builder.RegisterType<Seeder>().SingleInstance();
             builder.RegisterType<ForecastRepository>().As<IForecastRepository>().InstancePerLifetimeScope();
             builder.RegisterType<LookupRepository>().As<ILookupRepository>().InstancePerLifetimeScope();
         }
