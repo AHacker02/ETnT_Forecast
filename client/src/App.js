@@ -91,7 +91,7 @@ function App() {
                         }
                     </Dropdown.Menu>
                 </Dropdown>
-                <div className="ui item clickable" onClick={handleSaveClick}>
+                <div className={`ui item ${saving ? "" : "clickable"}`} onClick={handleSaveClick}>
                     {saving
                         ? (
                             <div className="ui active dimmer">

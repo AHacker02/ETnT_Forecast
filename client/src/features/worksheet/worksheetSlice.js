@@ -3,6 +3,7 @@ import _ from "lodash";
 import api from "../../utils/api";
 import {FORECAST, LOOKUP, TASK, UPLOAD} from "../../utils/endpoints";
 import {parse} from "json2csv";
+import {v4} from 'uuid';
 
 let cancelToken;
 const INITIAL_VALUE = {
@@ -21,6 +22,32 @@ const INITIAL_VALUE = {
         uploading: false,
         selectedRow: ""
     }
+}
+
+const EMPTY_FORECAST = {
+    id: "",
+    org: "",
+    manager: "",
+    usFocal: "",
+    project: "",
+    skillGroup: "",
+    business: "",
+    capability: "",
+    chargeline: "",
+    forecastConfidence: "",
+    comments: "",
+    jan: "",
+    feb: "",
+    mar: "",
+    apr: "",
+    may: "",
+    june: "",
+    july: "",
+    aug: "",
+    oct: "",
+    sep: "",
+    nov: "",
+    dec: ""
 }
 
 export const getForecast = createAsyncThunk(
@@ -116,6 +143,9 @@ export const worksheetSlice = createSlice({
         },
         setAppState: (state, action) => {
             state.app[action.payload.key] = action.payload.value;
+        },
+        addRow: (state,action)=>{
+            state.forecast.push({...EMPTY_FORECAST,id:v4()});
         }
     },
     extraReducers: {
@@ -137,7 +167,7 @@ export const worksheetSlice = createSlice({
     }
 });
 
-export const {setColValue, setSelectedYear, setAppState} = worksheetSlice.actions;
+export const {setColValue, setSelectedYear, setAppState,addRow} = worksheetSlice.actions;
 export const selectForecast = (state) => state.worksheet.forecast;
 export const selectFyYears = (state) => state.worksheet.fyYears;
 export const selectSelectedYear = (state) => state.worksheet.selectedYear;

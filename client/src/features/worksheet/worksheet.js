@@ -5,6 +5,7 @@ import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import './worksheet.css';
 import {useDispatch, useSelector} from "react-redux";
 import {
+    addRow,
     deleteForecast,
     selectBusiness,
     selectCapability,
@@ -154,6 +155,9 @@ const Worksheet = forwardRef((props, ref) => {
     const deleteRow = (event) => {
         if (event.key == 'Backspace' && event.shiftKey) {
             dispatch(deleteForecast())
+        }
+        if(event.key=='Enter' && event.shiftKey){
+            dispatch(addRow());
         }
     };
 
