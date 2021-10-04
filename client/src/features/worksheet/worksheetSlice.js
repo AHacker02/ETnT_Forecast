@@ -7,8 +7,8 @@ import {v4} from 'uuid';
 
 let cancelToken;
 const INITIAL_VALUE = {
-    forecast: null,
-    selectedYear: null,
+    forecast: [],
+    selectedYear: new Date().getFullYear(),
     orgs: [],
     users: [],
     projects: [],
